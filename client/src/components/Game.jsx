@@ -301,7 +301,7 @@ class Game extends React.Component {
           {/* their game: */}
           <div className="play" id="their-game"> 
             {this.state.theirWords.map((word, index) => {
-              return <Brick word={word} key={index} />
+              return <Brick word = { word } key = { index } />
             })}
             <div id="their-gudetama"></div>
             <form autoComplete="off">
