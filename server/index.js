@@ -7,19 +7,35 @@ var fs = require('fs');
 var path = require('path');
 var https = require('https');
 var app = express();
+var authMiddleware = require('./authMiddleWare.js');
 
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.json());
 
 app.use(session({
   secret: 'CRAZYSUPERSECRET',
-  resave: true
+  resave: true,
+  saveUninitialized: true
 }))
 
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(authMiddleware);
+
 //Authentication 
+app.get('/users', (req, res) => {
+  res.send();
+})
+
+app.get('/logout', ((req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.log(err);
+    }
+    res.redirect('/');
+  });
+}));
 
 app.get('/auth/facebook', passport.authenticate('facebook'));
 
