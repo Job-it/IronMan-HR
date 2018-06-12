@@ -22,29 +22,6 @@ class App extends React.Component {
 
   }
 
-  handleUserNameChange(e) {
-    this.setState({
-      username: e.target.value,
-    });
-  }
-
-  handleRoomNameClick(clickedRoom) {
-    socket.emit('leaving room', {
-      room: this.state.room,
-      username: undefined,
-    });
-    console.log(clickedRoom);
-    this.setState({
-      room: clickedRoom,
-    }, () => {
-      this.props.history.push('/game')
-      socket.emit('entering room', {
-        room: clickedRoom,
-      });
-    });
-  }
-
-
   componentDidMount() {
     axios.get('/users')
       .then((response) => {
@@ -71,6 +48,29 @@ class App extends React.Component {
       });
 
   }
+
+  handleUserNameChange(e) {
+    this.setState({
+      username: e.target.value,
+    });
+  }
+
+  handleRoomNameClick(clickedRoom) {
+    socket.emit('leaving room', {
+      room: this.state.room,
+      username: undefined,
+    });
+    console.log(clickedRoom);
+    this.setState({
+      room: clickedRoom,
+    }, () => {
+      this.props.history.push('/game')
+      socket.emit('entering room', {
+        room: clickedRoom,
+      });
+    });
+  }
+
 
   logout() {
     axios.get('/logout').then(() => {
