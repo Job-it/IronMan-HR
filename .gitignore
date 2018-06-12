@@ -2,3 +2,6 @@ client/dist/bundle.js
 node_modules
 package-lock.json
 .DS_Store
+sslConfig
+server.crt
+server.key
