@@ -29,6 +29,8 @@
     "mysql-server": "^1.0.5",
     "react": "16.4.0",
     "react-dom": "16.4.0",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
     "socket.io": "^2.1.1"
   },
   "devDependencies": {
