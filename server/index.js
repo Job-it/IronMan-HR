@@ -1,11 +1,49 @@
 var express = require('express');
+var session = require('express-session');
 var bodyParser = require('body-parser');
 var {retrieveUsers, addUserOrUpdateScore, get1000Words} = require('../database/index.js');
-
+var passport = require('./fbAuth');
+var fs = require('fs');
+var path = require('path');
+var https = require('https');
 var app = express();
+var authMiddleware = require('./authMiddleWare.js');
 
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.json());
+
+app.use(session({
+  secret: 'CRAZYSUPERSECRET',
+  resave: true,
+  saveUninitialized: true
+}))
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(authMiddleware);
+
+//Authentication 
+app.get('/users', (req, res) => {
+  res.send();
+})
+
+app.get('/logout', ((req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.log(err);
+    }
+    res.redirect('/');
+  });
+}));
+
+app.get('/auth/facebook', passport.authenticate('facebook'));
+
+app.get('/auth/facebook/callback',
+  passport.authenticate('facebook', {
+    successRedirect: '/',
+    failureRedirect: '/'
+  }));
 
 // querying all users and scores from the database 
 app.get('/wordgame', (req, res) => { 
@@ -30,7 +68,12 @@ app.get('/dictionary', (req, res) => {
 
 var port = process.env.PORT || 5000;
 
-var server = app.listen(port, function() {
+var certOptions = {
+  key: fs.readFileSync(path.resolve('server.key')),
+  cert: fs.readFileSync(path.resolve('server.crt'))
+}
+
+var server = https.createServer(certOptions, app).listen(port, function() {
   console.log(`listening on port ${port}!`);
 });
 

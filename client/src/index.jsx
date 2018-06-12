@@ -1,8 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { Route, withRouter } from 'react-router-dom';
 import Game from './components/Game.jsx';
 import Lobby from './components/Lobby.jsx';
 import Scoreboard from './components/Scoreboard.jsx';
+import Login from './components/Login.jsx';
+import axios from 'axios'
 
 const io = require('socket.io-client'); 
 const socket = io();
@@ -13,26 +15,11 @@ class App extends React.Component {
     this.state = {
       room: 'hardcodedRoom',
       username: '',
-      lobbyView: true,
-      gameView: false,
     }
     this.handleUserNameChange = this.handleUserNameChange.bind(this);
     this.handleRoomNameClick = this.handleRoomNameClick.bind(this);
     this.playerRoom = prompt('Create or join a room:');
 
-  }
-
-  componentDidMount() {
-
-    this.setState({
-      room: this.playerRoom,
-    }, () => {
-      var c = io.connect(process.env.PORT, {query: this.state.time});
-      console.log('c', c);
-      socket.emit('entering room', {
-        room: 'GUDETAMA ' + this.state.room
-      });
-    });
   }
 
   handleUserNameChange(e) {
@@ -48,10 +35,9 @@ class App extends React.Component {
     });
     console.log(clickedRoom);
     this.setState({
-      lobbyView: false,
-      gameView: true,
       room: clickedRoom,
     }, () => {
+      this.props.history.push('/game')
       socket.emit('entering room', {
         room: clickedRoom,
       });
@@ -59,22 +45,82 @@ class App extends React.Component {
   }
 
 
+  componentDidMount() {
+    axios.get('/users')
+      .then((response) => {
+        if (response.headers.user) {
+          var user = JSON.parse(response.headers.user);
+        } else {
+          var user = undefined;
+        }
+        if (user === undefined) {
+          this.props.history.push('/login');
+        } else {
+          this.props.history.push('/lobby');
+        }
+      })
+
+      this.setState({
+        room: this.playerRoom,
+      }, () => {
+        var c = io.connect(process.env.PORT, {query: this.state.time});
+        console.log('c', c);
+        socket.emit('entering room', {
+          room: 'GUDETAMA ' + this.state.room
+        });
+      });
+
+  }
+
+  logout() {
+    axios.get('/logout').then(() => {
+      this.props.history.push('/login');
+    })
+  }
 
   render() {
     return (
       <div className="app-container">
-        <nav>
-          <h1>SAVE GUDETAMA!</h1>
-        </nav>  
-        <div className="game-container">
-          {this.state.gameView ? <Game room={this.state.room} username={this.state.username} handleUserNameChange={this.handleUserNameChange} socket={socket}/> : null}
-          {this.state.lobbyView ? <Lobby room={this.state.room} username={this.state.username} handleUserNameChange={this.handleUserNameChange} handleRoomNameClick={this.handleRoomNameClick} socket={socket} /> : null}
-          {this.state.gameView ? <Scoreboard /> : null}
-        </div>
+        <Route path='/lobby' render={ (props) => <Lobby {...props} 
+          room={this.state.room}
+          username={this.state.username}
+          handleUserNameChange={this.handleUserNameChange}
+          handleRoomNameClick={this.handleRoomNameClick}
+          socket={socket}/> 
+        }/>
+        <Route path = '/game' render = {
+          (props) => {
+            return (<div>
+              <nav>
+                <h1>SAVE GUDETAMA!</h1>
+                <button onClick = {() => {this.logout()}} >Logout</button>
+              </nav>  
+              <div className="game-container">
+                <Game {...props} socket={socket} room={this.state.room} username={this.state.username} handleUserNameChange={this.handleUserNameChange}/>
+                <Scoreboard {...props} />
+              </div>
+            </div>);
+          }
+        }/>
+        <Route path = '/login' render = {
+          (props) => {
+            return (
+              <div>
+                <Login />
+              </div>
+            );
+          }
+        }/>
       </div>
     )
   }
 }
 
+export default withRouter(App);
 
-ReactDOM.render(<App />, document.getElementById('app'));
+// make a mvp login route (client);
+// One component, one html tag, one link --> /auth/facebook
+// on component did mount - send get to server 
+// parse response for user data in header
+// deal with the request on the server
+// conditionally route user
