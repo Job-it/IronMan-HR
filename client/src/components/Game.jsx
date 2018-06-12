@@ -1,8 +1,6 @@
 import React from 'react';
 import Brick from './Brick.jsx';
 import axios from 'axios';
-const io = require('socket.io-client'); 
-const socket = io();
 
 class Game extends React.Component {
   constructor(props) {
@@ -29,16 +27,15 @@ class Game extends React.Component {
     this.sendScore = this.sendScore.bind(this);
     this.stopGame = this.stopGame.bind(this);
 
-    var c = io.connect(process.env.PORT, {query: this.state.time})
-    console.log('c', c)
 
-    socket.on('receive words from opponent', (words) => {
+    this.props.socket.on('receive words from opponent', (words) => {
       this.updateOpponentWordList(words);
     });
-    socket.on('startGame', () => {
+    this.props.socket.on('startGame', () => {
+      console.log('starting game...');
       this.startGame();
     });
-    socket.on('they lost', (score) => {
+    this.props.socket.on('they lost', (score) => {
       // this is bad, eventually put a red x over their bricks or something
       this.setState({
         opponentTime: score,
@@ -47,7 +44,7 @@ class Game extends React.Component {
     });
   }
 
-  // get words from dictionary and join socket
+  // get words from dictionary and join this.props.socket
   componentDidMount() {
     axios.get('/dictionary')
     .then(results => {
@@ -57,25 +54,21 @@ class Game extends React.Component {
     }).catch(err => {
       console.error(err);
     });
-    socket.emit('entering room', {
-      room: this.props.room, 
-      username: this.props.username
-    });
   }
 
   // sends your words to opponent
   componentDidUpdate(prevProps, prevState) {
     if (this.state.words.length !== prevState.words.length) {
-      socket.emit('send words to opponent', {
+      this.props.socket.emit('send words to opponent', {
         room: this.props.room,
         newWords: this.state.words,
       }); 
     }
   }
 
-  // leave socket
+  // leave this.props.socket
   componentWillUnmount() {  
-    socket.emit('leaving room', {
+    this.props.socket.emit('leaving room', {
       room: this.props.room,
       username: this.props.username,
     });
@@ -89,7 +82,7 @@ class Game extends React.Component {
     this.setState({
       prompt: 'WAITING...',
     });
-    socket.emit('ready', {
+    this.props.socket.emit('ready', {
       room: this.props.room, 
       username: this.props.username
     });
@@ -124,7 +117,7 @@ class Game extends React.Component {
       if (this.state.words.length >= 20) {
         clearTimeout(step);
         //console.log('opponent time',this.state.time)
-        socket.emit('i lost', {
+        this.props.socket.emit('i lost', {
           room: this.props.room, 
           username: this.props.username, 
           score: this.state.time
