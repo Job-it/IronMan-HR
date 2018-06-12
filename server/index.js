@@ -39,11 +39,18 @@ var io = require('socket.io')(server);
 // an object to store what users are in what rooms
 var rooms = {};
 
+//send user the number of active game rooms
+app.get('/gamerooms', (req, res) => {
+  var gameRooms = io.sockets.adapter.rooms;
+  res.send(gameRooms);
+});
+
 // count the players in each room
 var getPlayerCount = (roomName) => {
   var playerCount = 0;
   for (var player in rooms[roomName]) {
     playerCount += rooms[roomName][player];
+    //console.log(roomName, player, playerCount);
   }
   return playerCount;
 }
@@ -58,11 +65,14 @@ io.on('connection', (socket) => {
 
   socket.on('entering room', (data) => {
     socket.join(data.room);
+    console.log(io.sockets.adapter.rooms);
   });
 
   socket.on('leaving room', (data) => {
     socket.leave(data.room);
-    rooms[data.room][data.username] = 0;
+    if (data.username !== undefined) {
+      rooms[data.room][data.username] = 0;
+    }
     if (getPlayerCount(data.room) === 0) {
       delete rooms[data.room];
     }
@@ -75,8 +85,10 @@ io.on('connection', (socket) => {
     }; 
     rooms[data.room][data.username] = 1; 
     console.log('ready, rooms is', rooms);
+    console.log(data);
     if (getPlayerCount(data.room) === 2) { //start the game with 2 players in the room
       io.in(data.room).emit('startGame');
+      console.log('emmiting start game @', data.room);
     }
   });
 
