@@ -8,6 +8,7 @@ var path = require('path');
 var https = require('https');
 var app = express();
 var authMiddleware = require('./authMiddleWare.js');
+var messageRouter = require('./Routers/messages.js')
 
 // Serve static files to the client
 app.use(express.static(__dirname + '/../client/dist'));
@@ -78,6 +79,10 @@ var server = https.createServer(certOptions, app).listen(port, function() {
   console.log(`listening on port ${port}!`);
 });
 
+// MESSAGES ROUTER
+
+app.use('/messages', messageRouter);
+
 // START SOCKET FUNCTIONALITY
 
 var io = require('socket.io')(server);
@@ -118,10 +123,22 @@ io.on('connection', (socket) => {
     console.log('user disconnected');
   });
 
+  socket.on('sent a message', (data) => {
+    io.in(data.room).emit('recieve message', {username: data.username, message: data.message});
+  });
+
+  socket.on('entering lobby', (data) => {
+    //Create socket for client
+    socket.join(data.room);
+  });
+
 // When the client emits the 'entering room' event join the socket into that room
 // push the users chosen username to the NOTREADY list of users
   socket.on('entering room', (data) => {
+    console.log(data.room);
+    //Create socket for client
     socket.join(data.room);
+    //Add player to not-ready state
     rooms[data.room].playersNotReady.push(data.username); 
   });
 
@@ -153,6 +170,12 @@ io.on('connection', (socket) => {
     socket.broadcast.to(data.room).emit('they lost', data.score);
     // Kick all of the users out of the room
     // Note --> the client provides the user with the option to return to the lobby.
+
+    //loser becomes last in spectators array
+    //first in speactators array becomes, players ready
+    //winner remains in players ready
+
+    //emit events to clients to handle these client side actions
     rooms[data.room] = { 
       spectators: [], 
       playersNotReady: [], 

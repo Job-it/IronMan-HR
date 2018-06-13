@@ -4,7 +4,9 @@ import Game from './components/Game.jsx';
 import Lobby from './components/Lobby.jsx';
 import Scoreboard from './components/Scoreboard.jsx';
 import Login from './components/Login.jsx';
+import Chat from './components/Chat.jsx'
 import axios from 'axios'
+
 
 const io = require('socket.io-client'); 
 const socket = io();
@@ -16,8 +18,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      room: 'hardcodedRoom',
+      room: 'GUDETAMA lobby',
       username: false,
+      userNameSubmitted: false
     }
     this.handleUserNameChange = this.handleUserNameChange.bind(this);
     this.handleRoomNameClick = this.handleRoomNameClick.bind(this);
@@ -37,7 +40,7 @@ class App extends React.Component {
         } else {
           this.props.history.push('/lobby');
         }
-      })
+      });
   }
 
   addRoom() {
@@ -82,13 +85,17 @@ class App extends React.Component {
   render() {
     return (
       <div className="app-container">
-        <Route path='/lobby' render={ (props) => <Lobby {...props} 
-          room={this.state.room}
-          username={this.state.username}
-          handleUserNameChange={this.handleUserNameChange}
-          handleRoomNameClick={this.handleRoomNameClick}
-          socket={socket}
-          addRoom={this.addRoom}/> 
+        <Route path='/lobby' render = { (props) => 
+          <div className = "lobby-display">
+            <Lobby {...props} 
+            room={this.state.room}
+            username={this.state.username}
+            handleUserNameChange={this.handleUserNameChange}
+            handleRoomNameClick={this.handleRoomNameClick}
+            socket={socket}
+            addRoom={this.addRoom}/>
+            {this.state.username ? <Chat room = {this.state.room} username = {this.state.username} socket={socket}/>: <div></div>}
+          </div>
         }/>
         <Route path = '/game' render = {
           (props) => {
