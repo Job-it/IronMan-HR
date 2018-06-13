@@ -89,6 +89,9 @@ class App extends React.Component {
         <Route path='/lobby' render = { (props) => 
           <div className = "lobby-display">
             <Lobby {...props} 
+            handleLogout = {() => {
+              this.logout()
+            }}
             room={this.state.room}
             username={this.state.username}
             handleUserNameChange={this.handleUserNameChange}
@@ -106,9 +109,6 @@ class App extends React.Component {
             return (<div>
               <nav>
                 <h1>SAVE GUDETAMA!</h1>
-                <div>
-                <button onClick = {() => {this.logout()}} >Logout</button>
-                </div>
               </nav>  
               <div className="game-container">
                 <Game {...props} socket={socket} room={this.state.room} username={this.state.username} handleUserNameChange={this.handleUserNameChange} history = {this.props.history}/>
