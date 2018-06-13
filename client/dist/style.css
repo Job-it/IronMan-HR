@@ -18,6 +18,10 @@ html, body, #app, .app-container {
   background: url("./assets/treebackground.png") center/cover;
 }
 
+.app-container > div {
+  height: 100%;
+}
+
 #app {
   padding: 10px;
 }
