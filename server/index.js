@@ -56,6 +56,7 @@ app.get('/wordgame', (req, res) => {
 
 // at end of game, add to or update db with username and high score
 app.post('/wordgame', (req,res) => {
+  console.log(req.body);
   addUserOrUpdateScore(req.body, (results) => {
     res.status(201).send(results);
   });
@@ -135,7 +136,7 @@ io.on('connection', (socket) => {
 // When the client emits the 'entering room' event join the socket into that room
 // push the users chosen username to the NOTREADY list of users
   socket.on('entering room', (data) => {
-    console.log(data.room);
+    // console.log(data.room);
     //Create socket for client
     socket.join(data.room);
     //Add player to not-ready state

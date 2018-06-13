@@ -253,6 +253,7 @@ class Game extends React.Component {
 
   // upon game over, sends username and score to database to be added/updated
   sendScore(username, score) {
+    console.log('sending score');
     axios.post('/wordgame', {
       "username": username,
       "high_score": score
@@ -293,13 +294,13 @@ class Game extends React.Component {
     document.getElementById('typing-input').disabled = true;
     document.getElementById('gudetama').style.display = "none";
     document.getElementById('their-gudetama').style.display = "none";
-    document.getElementById('starter-form').disabled = false;
-    document.getElementById('user-input').disabled = false;
+    // document.getElementById('starter-form').disabled = false;
+    // document.getElementById('user-input').disabled = false;
 
     // enables user to hit "enter" after 2 seconds to restart game
     setTimeout(() => {
       if (document.getElementById('overlay').display !== "none") {
-        document.getElementById('user-input').focus();
+        // document.getElementById('user-input').focus();
       }
     }, 2000);
     
