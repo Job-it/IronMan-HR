@@ -13,11 +13,15 @@ class Game extends React.Component {
       time: 0,
       timeInterval: 1000,
       round: 'all',
-      instructions: ["Humpty Dumpty sat on a wall,", "Humpty Dumpty had a great fall.", "All the king's horses and all the king's men", "Couldn't put Humpty together again.", "HURRY - KEEP TYPING TO PREVENT HIS DEMISE!"],
+      instructions: ["HURRY - KEEP TYPING TO PREVENT HIS DEMISE!"],
       prompt: 'START GAME',
       opponentTime: 0,
       userNameSelected: false,
-      gameover: false
+      gameover: false,
+      activePlayer: false,
+      opponentScore: 0,
+      opponentName: null,
+      opponentLost: false,
     }
     
     this.goToLobby = this.goToLobby.bind(this);
@@ -31,19 +35,37 @@ class Game extends React.Component {
     this.stopGame = this.stopGame.bind(this);
 
 
-    this.props.socket.on('receive words from opponent', (words) => {
-      this.updateOpponentWordList(words);
+    this.props.socket.on('receive words from opponent', (data) => {
+      if (!this.state.activePlayer) {
+        this.props.history.push('/spectator');
+      }
+      // this.updateOpponentWordList(data.newWords);
+      this.setState({
+        theirWords: data.newWords,
+        opponentScore: data.score,
+        opponentName: data.userName,
+      })
+
     });
     this.props.socket.on('startGame', () => {
       console.log('starting game...');
-      this.startGame();
+      if (this.state.activePlayer) {
+        this.startGame();
+      } else {
+        this.props.history.push('/spectator');
+      }
     });
-    this.props.socket.on('they lost', (score) => {
-      // this is bad, eventually put a red x over their bricks or something
-      this.setState({
-        opponentTime: score,
-      })
+    this.props.socket.on('they lost', (data) => {
+ 
+      // document.getElementById('our-game').style.backgroundColor = "green";
       document.getElementById('their-game').style.backgroundColor = "red";
+      console.log(data);
+      this.setState({
+        opponentLost: true,
+      })
+      if (this.state.gameover === true) {
+        this.showGameoverOverlay();
+      }
     });
   }
 
@@ -65,6 +87,8 @@ class Game extends React.Component {
       this.props.socket.emit('send words to opponent', {
         room: this.props.room,
         newWords: this.state.words,
+        userName: this.props.username,
+        score: this.state.time,
       }); 
     }
   }
@@ -91,6 +115,7 @@ class Game extends React.Component {
     // document.getElementById('user-input').disabled = true;
     this.setState({
       prompt: 'WAITING...',
+      activePlayer: true,
     });
     this.props.socket.emit('ready', {
       room: this.props.room, 
@@ -145,13 +170,13 @@ class Game extends React.Component {
       if (newTime > 20) {
         this.setState({
           time: newTime,
-          timeInterval: 600,
+          // timeInterval: 600,
           //round: 'roundThree', // uncomment these to only serve short words at beginning, long words at end
         });
       } else if (newTime > 8) { 
         this.setState({
           time: newTime,
-          timeInterval: 800,
+          // timeInterval: 800,
           //round: 'roundTwo',
         });
       } else {
@@ -184,7 +209,7 @@ class Game extends React.Component {
   // updates your view of opponent's words
   updateOpponentWordList(words) {
     this.setState({
-      theirWords: words
+      theirWords: words,
     })
   }
 
@@ -246,16 +271,26 @@ class Game extends React.Component {
     this.props.history.push('/lobby');
   }
 
+  showGameoverOverlay() {
+
+    this.setState({
+      instructions: ['GAME OVER', `YOU SCORED: ${this.state.time}`, `YOUR OPPONENT SCORED: ${this.state.opponentScore}`],
+      prompt: 'Back to lobby',
+    });
+    document.getElementById('overlay').style.display = "block";
+  }
+
   stopGame() {
 
     this.setState({
-      instructions: ['GAME OVER', `YOU SCORED: ${this.state.time}`, `YOUR OPPONENT SCORED: ${this.state.opponentTime}`],
-      prompt: 'Back to lobby',
       gameover: true
     });
 
+    if(this.state.opponentLost === true) {
+      this.showGameoverOverlay();
+    }
+
     document.getElementById('typing-input').disabled = true;
-    document.getElementById('overlay').style.display = "block";
     document.getElementById('gudetama').style.display = "none";
     document.getElementById('their-gudetama').style.display = "none";
     document.getElementById('starter-form').disabled = false;
@@ -293,14 +328,11 @@ class Game extends React.Component {
           </div> */}
           <div id="overlay-start" onClick={this.state.gameover ? this.goToLobby : this.getReady } className="blinking">{this.state.prompt}</div>
         </div>
-    
-        <div className="timer">
-          <h1>{this.state.time}</h1>
-        </div>
 
         <div className="board">
           {/* your game: */}
           <div className="play"> 
+            <div className="timer"><h1>{this.state.time}</h1></div>
             {this.state.words.map((word, index) => {
               return <Brick word={word} key={index} />
             })}
@@ -312,12 +344,13 @@ class Game extends React.Component {
 
           {/* their game: */}
           <div className="play" id="their-game"> 
+            <div className="timer"><h1>{this.state.opponentScore}</h1></div>
             {this.state.theirWords.map((word, index) => {
               return <Brick word = { word } key = { index } />
             })}
             <div id="their-gudetama"></div>
             <form autoComplete="off">
-              <input value="OPPONENT" />
+              <input value={this.state.opponentName} />
             </form>
           </div>
         </div>

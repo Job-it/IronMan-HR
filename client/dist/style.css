@@ -18,6 +18,10 @@ html, body, #app, .app-container {
   background: url("./assets/treebackground.png") center/cover;
 }
 
+.app-container > div {
+  height: 100%;
+}
+
 #app {
   padding: 10px;
 }
@@ -25,8 +29,9 @@ html, body, #app, .app-container {
 #overlay {
   position: fixed;
   display: block;
-  height: 75%;
+  height: 40%;
   width: 65%;
+  max-width: 275px;
   top: 0; 
   left: 0;
   right: 0;
@@ -153,9 +158,10 @@ input {
 }
 
 #crackedegg {
-  width: 45%;
-  height: 45%;
+  height: 30%;
   background: url("./assets/gudetama-cracked.gif") no-repeat center/cover;
+  display: block;
+  margin: 0 auto;
 }
 
 .sbColumn {
