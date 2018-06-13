@@ -14,6 +14,10 @@ class Chat extends React.Component {
       newMessages.push(messageObj);
       this.setState({
         messages: newMessages
+      }, () => {
+        //scroll when new messages come in
+        var messagesDiv = document.getElementById("messages");
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
       });
     });
 
@@ -23,6 +27,10 @@ class Chat extends React.Component {
     axios.get(`/messages?room=${this.props.room}`).then((response) => {
       this.setState({
         messages: response.data
+      }, () => {
+        //scroll when new messages come in
+        var messagesDiv = document.getElementById("messages");
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
       })
     });
   }
@@ -51,7 +59,7 @@ class Chat extends React.Component {
   render() {
     return (
       <div className = "chat-box">
-        <div className ='messages'>
+        <div className ='messages' id='messages'>
           <ul className = 'message-list'>
             {this.state.messages.map((messageObj) => {
               return (
