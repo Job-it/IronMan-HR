@@ -15,7 +15,8 @@ class Game extends React.Component {
       round: 'all',
       instructions: ["Humpty Dumpty sat on a wall,", "Humpty Dumpty had a great fall.", "All the king's horses and all the king's men", "Couldn't put Humpty together again.", "HURRY - KEEP TYPING TO PREVENT HIS DEMISE!"],
       prompt: 'START GAME',
-      opponentTime: 0
+      opponentTime: 0,
+      userNameSelected: false
     }
     
     this.getReady = this.getReady.bind(this);
@@ -73,6 +74,13 @@ class Game extends React.Component {
       username: this.props.username,
     });
   }
+
+  // submitUserName(e) {
+  //   e.preventDefault();
+  //   this.setState({
+  //     userNameSelected: true
+  //   })
+  // }
 
   // hides starter form and user input, waits for another player to start game
   getReady(e) {
@@ -266,12 +274,13 @@ class Game extends React.Component {
             return (<span key={index}>{line}<br></br></span>)
           })}</div>
           <div id="crackedegg"></div>
-          <div>
-            {/* "getReady" waits for 2 players, "startGame" (on click) is 1 player */}
-            <form id="starter-form" onSubmit={this.getReady} autoComplete="off">
-              <input id="user-input" placeholder="Who are you?" value={this.props.username} onChange={this.props.handleUserNameChange} autoFocus/>
+          {/* <div>
+            "getReady" waits for 2 players, "startGame" (on click) is 1 player
+            <form id="starter-form" onSubmit={(e) => {this.submitUserName(e)}} autoComplete="off">
+              {this.userNameSelected ? <div></div> : <input id="user-input" placeholder="Who are you?" onChange={this.props.handleUserNameChange} autoFocus/>}
+              <button type = "submit"> Select Username </button>
             </form>
-          </div>
+          </div> */}
           <div id="overlay-start" onClick={this.startGame} className="blinking">{this.state.prompt}</div>
         </div>
     

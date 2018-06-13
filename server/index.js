@@ -77,6 +77,8 @@ var server = https.createServer(certOptions, app).listen(port, function() {
   console.log(`listening on port ${port}!`);
 });
 
+// START SOCKET FUNCTIONALITY
+
 var io = require('socket.io')(server);
 
 // an object to store what users are in what rooms
@@ -90,12 +92,7 @@ app.get('/gamerooms', (req, res) => {
 
 // count the players in each room
 var getPlayerCount = (roomName) => {
-  var playerCount = 0;
-  for (var player in rooms[roomName]) {
-    playerCount += rooms[roomName][player];
-    //console.log(roomName, player, playerCount);
-  }
-  return playerCount;
+  return rooms[roomName].length;
 }
 
 // all socket logic:
@@ -108,27 +105,25 @@ io.on('connection', (socket) => {
 
   socket.on('entering room', (data) => {
     socket.join(data.room);
-    console.log(io.sockets.adapter.rooms);
+    if (!rooms[data.room]) {
+      rooms[data.room] = [];
+    };
+    rooms[data.room].push(data.username); 
+    console.log('WE ARE TRYING TO JOIN THIS ROOM, ', data.room);
+    console.log(rooms);
   });
 
   socket.on('leaving room', (data) => {
+    console.log('WE ARE TRYING TO LEAVE THIS ROOM,', data.room);
     socket.leave(data.room);
-    if (data.username !== undefined) {
-      rooms[data.room][data.username] = 0;
+    if (rooms[data.room]) {
+      rooms[data.room] = rooms[data.room].filter((user) => user !== data.username);
     }
-    if (getPlayerCount(data.room) === 0) {
-      delete rooms[data.room];
-    }
-    console.log('leaving room, rooms is', rooms);
+    console.log('leaving room, rooms is', data.room);
   });
 
   socket.on('ready', (data) => {
-    if (!rooms[data.room]) {
-      rooms[data.room] = {};
-    }; 
-    rooms[data.room][data.username] = 1; 
     console.log('ready, rooms is', rooms);
-    console.log(data);
     if (getPlayerCount(data.room) === 2) { //start the game with 2 players in the room
       io.in(data.room).emit('startGame');
       console.log('emmiting start game @', data.room);
@@ -137,7 +132,7 @@ io.on('connection', (socket) => {
 
   socket.on('i lost', (data) => {
     socket.broadcast.to(data.room).emit('they lost', data.score);
-    rooms[data.room][data.username] = 0;
+    rooms[data.room] = [];
     console.log('i lost, rooms is', rooms);
   });
 

@@ -14,11 +14,11 @@ class App extends React.Component {
     super(props);
     this.state = {
       room: 'hardcodedRoom',
-      username: '',
+      username: false,
     }
     this.handleUserNameChange = this.handleUserNameChange.bind(this);
     this.handleRoomNameClick = this.handleRoomNameClick.bind(this);
-    this.playerRoom = prompt('Create or join a room:');
+    this.playerRoom = 'lobby';
 
   }
 
@@ -37,15 +37,16 @@ class App extends React.Component {
         }
       })
 
-      this.setState({
-        room: this.playerRoom,
-      }, () => {
-        var c = io.connect(process.env.PORT, {query: this.state.time});
-        console.log('c', c);
-        socket.emit('entering room', {
-          room: 'GUDETAMA ' + this.state.room
-        });
-      });
+      // this.setState({
+      //   room: this.playerRoom,
+      // }, () => {
+      //   var c = io.connect(process.env.PORT, {query: this.state.time});
+      //   console.log('c', c);
+      //   socket.emit('entering room', {
+      //     room: 'GUDETAMA ' + this.state.room,
+      //     username: this.state.username
+      //   });
+      // });
 
   }
 
@@ -58,16 +59,18 @@ class App extends React.Component {
   handleRoomNameClick(clickedRoom) {
     socket.emit('leaving room', {
       room: this.state.room,
-      username: undefined,
+      username: this.state.username,
     });
-    console.log(clickedRoom);
     this.setState({
       room: clickedRoom,
     }, () => {
-      this.props.history.push('/game')
+      var c = io.connect(process.env.PORT, {query: this.state.time});
+      console.log('c', c);
       socket.emit('entering room', {
-        room: clickedRoom,
+        room: 'GUDETAMA ' + this.state.room,
+        username: this.state.username
       });
+      this.props.history.push('/game');
     });
   }
 

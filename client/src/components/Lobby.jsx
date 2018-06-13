@@ -8,6 +8,8 @@ class Lobby extends React.Component {
     this.state = {
       customRoomName: '',
       rooms: [],
+      userNameSubmitted: false,
+      roomNameInput: ''
     }
 
     this.getGameRoomsAndSetState = this.getGameRoomsAndSetState.bind(this);
@@ -20,8 +22,19 @@ class Lobby extends React.Component {
 
   handleUserNameSubmit(e) {
     e.preventDefault();
+    console.log('submitted');
+    this.setState({
+      userNameSubmitted: true
+    });
     this.getGameRoomsAndSetState();
   }
+
+  handleRoomNameChange(e) {
+    this.setState({
+      roomNameInput: e.target.value
+    })
+  }
+
 
   getGameRoomsAndSetState() {
     axios.get('/gamerooms')
@@ -39,9 +52,10 @@ class Lobby extends React.Component {
   render() {
     return (
       <div>
-        <form id="starter-form" onSubmit={(e) => this.handleUserNameSubmit(e)} autoComplete="off">
-          <input id="user-input" placeholder="Who are you?" value={this.props.username} onChange={this.props.handleUserNameChange} autoFocus/>
-        </form>
+        {this.state.userNameSubmitted ? <div></div> : <form id="starter-form" onSubmit={(e) => this.handleUserNameSubmit(e)} autoComplete="off">
+          <input id="user-input" placeholder="Who are you?" onChange={this.props.handleUserNameChange} autoFocus/>
+          <button type = 'submit'>Select Username</button>
+        </form>}
         <button onClick={this.getGameRoomsAndSetState}>Update Room List</button>
         Room List:
         <ul>
