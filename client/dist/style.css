@@ -180,3 +180,11 @@ input {
 .sbHeader{
   margin-left: 70px
 }
+
+.tiny-details {
+  font-size: 7px;
+}
+
+.room-details {
+  margin-top: 15px;
+}

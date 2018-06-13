@@ -16,9 +16,11 @@ class Game extends React.Component {
       instructions: ["Humpty Dumpty sat on a wall,", "Humpty Dumpty had a great fall.", "All the king's horses and all the king's men", "Couldn't put Humpty together again.", "HURRY - KEEP TYPING TO PREVENT HIS DEMISE!"],
       prompt: 'START GAME',
       opponentTime: 0,
-      userNameSelected: false
+      userNameSelected: false,
+      gameover: false
     }
     
+    this.goToLobby = this.goToLobby.bind(this);
     this.getReady = this.getReady.bind(this);
     this.startGame = this.startGame.bind(this);
     this.addWord = this.addWord.bind(this);
@@ -85,8 +87,8 @@ class Game extends React.Component {
   // hides starter form and user input, waits for another player to start game
   getReady(e) {
     e.preventDefault();
-    document.getElementById('starter-form').disabled = true;
-    document.getElementById('user-input').disabled = true;
+    // document.getElementById('starter-form').disabled = true;
+    // document.getElementById('user-input').disabled = true;
     this.setState({
       prompt: 'WAITING...',
     });
@@ -237,7 +239,21 @@ class Game extends React.Component {
     })
   }
 
+  goToLobby() {
+    this.setState({
+      gameover: false
+    })
+    this.props.history.push('/lobby');
+  }
+
   stopGame() {
+
+    this.setState({
+      instructions: ['GAME OVER', `YOU SCORED: ${this.state.time}`, `YOUR OPPONENT SCORED: ${this.state.opponentTime}`],
+      prompt: 'Back to lobby',
+      gameover: true
+    });
+
     document.getElementById('typing-input').disabled = true;
     document.getElementById('overlay').style.display = "block";
     document.getElementById('gudetama').style.display = "none";
@@ -256,12 +272,6 @@ class Game extends React.Component {
  
     // audio effect
     playGameOver();
-    
-    this.setState({
-      // maybe find a way to compare your score vs opponent's score and show YOU WIN/YOU LOSE
-      instructions: ['GAME OVER', `YOU SCORED: ${this.state.time}`, `YOUR OPPONENT SCORED: ${this.state.opponentTime}`],
-      prompt: 'REPLAY',
-    });
   }
 
   render() {
@@ -281,7 +291,7 @@ class Game extends React.Component {
               <button type = "submit"> Select Username </button>
             </form>
           </div> */}
-          <div id="overlay-start" onClick={this.startGame} className="blinking">{this.state.prompt}</div>
+          <div id="overlay-start" onClick={this.state.gameover ? this.goToLobby : this.getReady } className="blinking">{this.state.prompt}</div>
         </div>
     
         <div className="timer">
