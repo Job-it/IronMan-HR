@@ -17,12 +17,11 @@ class App extends React.Component {
     super(props);
     this.state = {
       room: 'hardcodedRoom',
-      username: '',
+      username: false,
     }
     this.handleUserNameChange = this.handleUserNameChange.bind(this);
     this.handleRoomNameClick = this.handleRoomNameClick.bind(this);
     this.addRoom = this.addRoom.bind(this);
-
   }
 
   componentDidMount() {
@@ -39,7 +38,6 @@ class App extends React.Component {
           this.props.history.push('/lobby');
         }
       })
-
   }
 
   addRoom() {
@@ -51,13 +49,7 @@ class App extends React.Component {
 
     var playerRoom = prompt('Create or join a room:');
 
-    this.setState({
-      room: playerRoom,
-    }, () => {
-      socket.emit('entering room', {
-        room: 'GUDETAMA ' + this.state.room
-      });
-    });
+    axios.post('/rooms', {newRoom: playerRoom});
 
   }
 
@@ -68,20 +60,18 @@ class App extends React.Component {
   }
 
   handleRoomNameClick(clickedRoom) {
-    socket.emit('leaving room', {
-      room: 'GUDETAMA ' + this.state.room,
-    });
-    console.log(clickedRoom);
     this.setState({
       room: clickedRoom,
     }, () => {
-      this.props.history.push('/game')
+      var c = io.connect(process.env.PORT, {query: this.state.time});
+      console.log('c', c);
       socket.emit('entering room', {
         room: clickedRoom,
+        username: this.state.username
       });
+      this.props.history.push('/game');
     });
   }
-
 
   logout() {
     axios.get('/logout').then(() => {
@@ -110,7 +100,7 @@ class App extends React.Component {
                 </div>
               </nav>  
               <div className="game-container">
-                <Game {...props} socket={socket} room={this.state.room} username={this.state.username} handleUserNameChange={this.handleUserNameChange}/>
+                <Game {...props} socket={socket} room={this.state.room} username={this.state.username} handleUserNameChange={this.handleUserNameChange} history = {this.props.history}/>
                 <Scoreboard {...props} />
               </div>
             </div>);

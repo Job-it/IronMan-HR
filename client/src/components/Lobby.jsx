@@ -8,6 +8,8 @@ class Lobby extends React.Component {
     this.state = {
       customRoomName: '',
       rooms: [],
+      userNameSubmitted: false,
+      roomNameInput: ''
     }
 
     this.getGameRoomsAndSetState = this.getGameRoomsAndSetState.bind(this);
@@ -20,33 +22,56 @@ class Lobby extends React.Component {
 
   handleUserNameSubmit(e) {
     e.preventDefault();
+    console.log('submitted');
+    this.setState({
+      userNameSubmitted: true
+    });
+    this.getGameRoomsAndSetState();
+  }
+
+  handleRoomNameChange(e) {
+    this.setState({
+      roomNameInput: e.target.value
+    })
+  }
+
+  addRoomAndGetNewRooms() {
+    this.props.addRoom();
     this.getGameRoomsAndSetState();
   }
 
   getGameRoomsAndSetState() {
     axios.get('/gamerooms')
     .then((res) => {
-      var roomsFromServer = Object.keys(res.data).filter((roomName) => roomName.includes('GUDETAMA'));
+      console.log(res.data);
       this.setState({
-        rooms: roomsFromServer,
-      }, () => {
-        console.log(this.state.rooms);
-      })
-    })
+        rooms: res.data,
+      });
+    });
   }
 
 
   render() {
     return (
       <div>
-        <form id="starter-form" onSubmit={(e) => this.handleUserNameSubmit(e)} autoComplete="off">
-          <input id="user-input" placeholder="Who are you?" value={this.props.username} onChange={this.props.handleUserNameChange} autoFocus/>
-        </form>
-        <button onClick = {() => {this.props.addRoom()}} >Add Room</button>
+        {this.state.userNameSubmitted ? <div></div> : <form id="starter-form" onSubmit={(e) => this.handleUserNameSubmit(e)} autoComplete="off">
+          <input id="user-input" placeholder="Who are you?" onChange={this.props.handleUserNameChange} autoFocus/>
+        </form>}
         <button onClick={this.getGameRoomsAndSetState}>Update Room List</button>
-        Room List:
+        {this.state.userNameSubmitted ? <button onClick = {() => {this.addRoomAndGetNewRooms()}} >Add Room</button> : <div></div>}
+        <div>Room List: </div>
         <ul>
-          {this.state.rooms.map((room) => <li onClick={() => this.props.handleRoomNameClick(room) }>{room}</li>)}
+          { Object.keys(this.state.rooms).map((room) => {
+            return (
+              <li className = 'room-details' onClick={() => this.props.handleRoomNameClick(room) }>
+                <span>{room}</span>
+                <br/>
+                <span className = 'tiny-details'>In the room: {this.state.rooms[room].playersNotReady.length === 0 ? 'NOONE | ' : this.state.rooms[room].playersNotReady + ' | '}</span>
+                <span className = 'tiny-details'>Ready to play: {this.state.rooms[room].playersReady.length === 0 ? 'NOONE | ' : this.state.rooms[room].playersReady + ' | '}</span>
+                <span className = 'tiny-details'>Watching the action: {this.state.rooms[room].spectators.length === 0 ? 'NOONE | ' : this.state.rooms[room].spectators + ' | '}</span>
+              </li>
+            )
+          }) }
         </ul>
       </div>
     )

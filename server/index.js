@@ -9,6 +9,7 @@ var https = require('https');
 var app = express();
 var authMiddleware = require('./authMiddleWare.js');
 
+// Serve static files to the client
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.json());
 
@@ -77,28 +78,39 @@ var server = https.createServer(certOptions, app).listen(port, function() {
   console.log(`listening on port ${port}!`);
 });
 
+// START SOCKET FUNCTIONALITY
+
 var io = require('socket.io')(server);
 
-// an object to store what users are in what rooms
+// ROOMS STORAGE OBJECT 
+// EXAMPLE ROOM:
+// {spectators: [], playersNotReady: [], playersReady: []}
 var rooms = {};
 
-//send user the number of active game rooms
+// When a user adds a new room, store that room in the ROOMS STORAGE OBJECT
+app.post('/rooms', (req, res) => {
+  var allRooms = Object.keys(rooms);
+  if (!allRooms.includes(req.body.newRoom)) {
+    rooms['GUDETAMA ' + req.body.newRoom] = { 
+      spectators: [], 
+      playersNotReady: [], 
+      playersReady: []
+    };
+  };
+  res.status(200).send();
+})
+
+// When the client requests all existing rooms, send them all of the rooms that have been created
 app.get('/gamerooms', (req, res) => {
-  var gameRooms = io.sockets.adapter.rooms;
-  res.send(gameRooms);
+  res.send(rooms);
 });
 
-// count the players in each room
-var getPlayerCount = (roomName) => {
-  var playerCount = 0;
-  for (var player in rooms[roomName]) {
-    playerCount += rooms[roomName][player];
-    //console.log(roomName, player, playerCount);
-  }
-  return playerCount;
+// Returns the total numbers of players that are READY in a given room to trigger the start of a match
+var getReadyPlayerCount = (roomName) => {
+  return rooms[roomName].playersReady.length;
 }
 
-// all socket logic:
+// Socket events:
 io.on('connection', (socket) => { 
   console.log('a user connected');
 
@@ -106,26 +118,32 @@ io.on('connection', (socket) => {
     console.log('user disconnected');
   });
 
+// When the client emits the 'entering room' event join the socket into that room
+// push the users chosen username to the NOTREADY list of users
   socket.on('entering room', (data) => {
     socket.join(data.room);
-    console.log('entering room', data.room, socket.id);
-    console.log(io.sockets.adapter.rooms);
+    rooms[data.room].playersNotReady.push(data.username); 
   });
 
+// @Dev team - this is not needed for right now, connection / room is ended when game is over
   socket.on('leaving room', (data) => {
-    socket.leave(data.room);
-    console.log('leaving room, rooms is', rooms);
-    console.log(io.sockets.adapter.rooms);
+    // Users are not part of a room until they click on that room
+    // Please note that this will be used in the future when we need to allow room changing.
+    // socket.leave(data.room);
+    // if (rooms[data.room]) {
+    //   rooms[data.room] = rooms[data.room].filter((user) => user !== data.username);
+    // }
+    // console.log('LEAVING A ROOM, THESE ARE THE ROOMS', io.sockets.adapter.rooms);
   });
 
   socket.on('ready', (data) => {
-    if (!rooms[data.room]) {
-      rooms[data.room] = {};
-    }; 
-    rooms[data.room][data.username] = 1; 
-    console.log('ready, rooms is', rooms);
-    console.log(data);
-    if (getPlayerCount(data.room) === 2) { //start the game with 2 players in the room
+    // Move the user from NOTREADY to READY in the room
+    rooms[data.room].playersReady.push(data.username);
+    rooms[data.room].playersNotReady = rooms[data.room].playersNotReady.filter((user) => {
+      return user !== data.username;
+    })
+    // Start the game if 2+ users are in the ready state
+    if (getReadyPlayerCount(data.room) >= 2) { 
       io.in(data.room).emit('startGame');
       console.log('emmiting start game @', data.room);
     }
@@ -133,8 +151,13 @@ io.on('connection', (socket) => {
 
   socket.on('i lost', (data) => {
     socket.broadcast.to(data.room).emit('they lost', data.score);
-    rooms[data.room][data.username] = 0;
-    console.log('i lost, rooms is', rooms);
+    // Kick all of the users out of the room
+    // Note --> the client provides the user with the option to return to the lobby.
+    rooms[data.room] = { 
+      spectators: [], 
+      playersNotReady: [], 
+      playersReady: []
+    };
   });
 
   socket.on('send words to opponent', function(data) {
