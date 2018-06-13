@@ -199,7 +199,16 @@ input {
   background-color: #ffffff;
   border: solid 3px #e0e0e0;
   border-radius: 6px;
+}
+
+.messages {
   overflow: scroll;
+  height: 100%;
+}
+
+.scoreboard{
+  overflow: auto;
+  height: 45%;
 }
 
 .in-game-chat-wrapper{
