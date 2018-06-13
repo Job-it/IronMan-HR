@@ -3,12 +3,9 @@ const fs = require('fs');
 const path = require('path');
 
 const connection = mysql.createConnection({
-  host: 'ironman.crb3zmhwoovo.us-east-1.rds.amazonaws.com',
-  user: 'IronMan', 
-  password: 'IronMan-HR', 
+  host: 'localhost',
+  user: 'root',
   database: 'humptydumpty',
-  port: 3306,
-  timeout: 6000,
 });
 
 connection.connect(function(err) {
@@ -135,6 +132,30 @@ const addUserOrUpdateScore = function(userWithScore, callback) {
   })  
 }
 
+const saveMessage = ({message, username, room}) => {
+  return new Promise((resolve, reject) => {
+    connection.query(`INSERT INTO messages (username, message, room) VALUES ('${username}', '${message}', '${room}')`, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};
+
+const getMessages = ({room}) => {
+  return new Promise((resolve, reject) => {
+    connection.query(`SELECT * FROM messages where room = '${room}'`, (err, results) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+};
+
 // Below are tests to make sure database is working:
 //addUserOrUpdateScore({username: 'scott', high_score: 200});
 //addUserOrUpdateScore({username: 'egg', high_score: 99});
@@ -146,4 +167,6 @@ module.exports = {
   retrieveUsers,
   addUserOrUpdateScore,
   get1000Words,
+  saveMessage,
+  getMessages
 };

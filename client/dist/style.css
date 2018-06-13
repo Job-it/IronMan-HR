@@ -188,3 +188,35 @@ input {
 .room-details {
   margin-top: 15px;
 }
+
+.chat-box {
+  min-width: 100px;
+  margin: 20px 0 20px 0;
+  height: 80vh;
+  width: 20%;
+  background-color: #ffffff;
+  border: solid 3px #e0e0e0;
+  border-radius: 6px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.lobby-display {
+  display: flex;
+  justify-content: space-between;
+}
+
+.send-message {
+  height: 4vh;
+  margin: 0 auto;
+}
+
+.message-input {
+  margin-top: 30px;
+}
+
+.message-list {
+  margin: 0 auto;
+  height: 80%;
+  width: 90%;
+}
