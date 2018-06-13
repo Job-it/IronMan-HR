@@ -150,7 +150,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('i lost', (data) => {
-    socket.broadcast.to(data.room).emit('they lost', data.score);
+    socket.broadcast.to(data.room).emit('they lost', data);
     // Kick all of the users out of the room
     // Note --> the client provides the user with the option to return to the lobby.
     rooms[data.room] = { 
@@ -161,6 +161,16 @@ io.on('connection', (socket) => {
   });
 
   socket.on('send words to opponent', function(data) {
-    socket.broadcast.to(data.room).emit('receive words from opponent', data.newWords);
+    socket.broadcast.to(data.room).emit('receive words from opponent', data);
   });
+});
+
+app.get('/lobby', (req, res) => {
+  res.redirect('/');
+});
+app.get('/game', (req, res) => {
+  res.redirect('/');
+});
+app.get('/spectator', (req, res) => {
+  res.redirect('/');
 });

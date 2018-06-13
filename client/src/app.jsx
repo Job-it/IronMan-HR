@@ -5,6 +5,7 @@ import Lobby from './components/Lobby.jsx';
 import Scoreboard from './components/Scoreboard.jsx';
 import Login from './components/Login.jsx';
 import axios from 'axios'
+import Spectator from './components/Spectator.jsx';
 
 const io = require('socket.io-client'); 
 const socket = io();
@@ -101,6 +102,22 @@ class App extends React.Component {
               </nav>  
               <div className="game-container">
                 <Game {...props} socket={socket} room={this.state.room} username={this.state.username} handleUserNameChange={this.handleUserNameChange} history = {this.props.history}/>
+                <Scoreboard {...props} />
+              </div>
+            </div>);
+          }
+        }/>
+        <Route path = '/spectator' render = {
+          (props) => {
+            return (<div>
+              <nav>
+                <h1>SAVE GUDETAMA!</h1>
+                <div>
+                <button onClick = {() => {this.logout()}} >Logout</button>
+                </div>
+              </nav>  
+              <div className="game-container">
+                <Spectator {...props} socket={socket} room={this.state.room} username={this.state.username} handleUserNameChange={this.handleUserNameChange} history = {this.props.history}/>
                 <Scoreboard {...props} />
               </div>
             </div>);
