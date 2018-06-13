@@ -109,7 +109,10 @@ class App extends React.Component {
               </nav>  
               <div className="game-container">
                 <Game {...props} socket={socket} room={this.state.room} username={this.state.username} handleUserNameChange={this.handleUserNameChange} history = {this.props.history}/>
-                <Scoreboard {...props} />
+                <div className='sidebar-wrapper'>
+                  <Scoreboard {...props} />
+                  <div className='in-game-chat-wrapper'><Chat {...props} room = {this.state.room} username = {this.state.username} socket={socket} /></div>
+                </div>
               </div>
             </div>);
           }
@@ -125,7 +128,10 @@ class App extends React.Component {
               </nav>  
               <div className="game-container">
                 <Spectator {...props} socket={socket} room={this.state.room} username={this.state.username} handleUserNameChange={this.handleUserNameChange} history = {this.props.history}/>
-                <Scoreboard {...props} />
+                <div className='sidebar-wrapper'>
+                  <Scoreboard {...props} />
+                  <div className='in-game-chat-wrapper'><Chat {...props} room = {this.state.room} username = {this.state.username} socket={socket} /></div>
+                </div>
               </div>
             </div>);
           }

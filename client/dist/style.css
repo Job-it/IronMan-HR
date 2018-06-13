@@ -93,10 +93,6 @@ nav {
   width: 70%;
 }
 
-.scoreboard {
-  width: 30%;
-}
-
 .timer {
   text-align: center;
   height: 10%;
@@ -198,13 +194,24 @@ input {
 .chat-box {
   min-width: 100px;
   margin: 20px 0 20px 0;
-  height: 80vh;
   width: 20%;
+  height: 100%;
   background-color: #ffffff;
   border: solid 3px #e0e0e0;
   border-radius: 6px;
-  display: flex;
-  flex-wrap: wrap;
+  overflow: scroll;
+}
+
+.in-game-chat-wrapper{
+  height: 40%;
+}
+
+.sidebar-wrapper{
+  width: 30%;
+}
+
+.in-game-chat-wrapper .chat-box{
+  width: 100%;
 }
 
 .lobby-display {
@@ -225,4 +232,5 @@ input {
   margin: 0 auto;
   height: 80%;
   width: 90%;
+  padding: 0;
 }

@@ -50,19 +50,23 @@ class Chat extends React.Component {
 
   render() {
     return (
-      <div className = "chat-box"> 
-        <ul className = 'message-list'>
-          {this.state.messages.map((messageObj) => {
-            return (
-            <li>
-              <span className = "chat-username"> {messageObj.username}:  </span>
-              <span className = "chat-message"> {messageObj.message} </span>
-            </li>)
-          })}
-        </ul>
-        <form className = 'send-message' onSubmit = {(e) => {this.handleSubmit(e)}}>
-          <input className = 'message-input' type = 'text' onChange = {(e) => {this.handleChange(e)}} value = {this.state.userInput}></input>
-        </form>
+      <div className = "chat-box">
+        <div className ='messages'>
+          <ul className = 'message-list'>
+            {this.state.messages.map((messageObj) => {
+              return (
+              <li>
+                <span className = "chat-username"> {messageObj.username}:  </span>
+                <span className = "chat-message"> {messageObj.message} </span>
+              </li>)
+            })}
+          </ul>
+        </div>
+        <div className ='send-wrapper'>
+          <form className = 'send-message' onSubmit = {(e) => {this.handleSubmit(e)}}>
+            <input className = 'message-input' type = 'text' onChange = {(e) => {this.handleChange(e)}} value = {this.state.userInput}></input>
+          </form>
+        </div>
       </div>
     )
   }
