@@ -42,6 +42,7 @@ class Lobby extends React.Component {
         <form id="starter-form" onSubmit={(e) => this.handleUserNameSubmit(e)} autoComplete="off">
           <input id="user-input" placeholder="Who are you?" value={this.props.username} onChange={this.props.handleUserNameChange} autoFocus/>
         </form>
+        <button onClick = {() => {this.props.addRoom()}} >Add Room</button>
         <button onClick={this.getGameRoomsAndSetState}>Update Room List</button>
         Room List:
         <ul>

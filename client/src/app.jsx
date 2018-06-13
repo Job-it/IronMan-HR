@@ -9,6 +9,9 @@ import axios from 'axios'
 const io = require('socket.io-client'); 
 const socket = io();
 
+var c = io.connect(process.env.PORT);
+console.log('c', c);
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -18,7 +21,7 @@ class App extends React.Component {
     }
     this.handleUserNameChange = this.handleUserNameChange.bind(this);
     this.handleRoomNameClick = this.handleRoomNameClick.bind(this);
-    this.playerRoom = prompt('Create or join a room:');
+    this.addRoom = this.addRoom.bind(this);
 
   }
 
@@ -37,15 +40,24 @@ class App extends React.Component {
         }
       })
 
-      this.setState({
-        room: this.playerRoom,
-      }, () => {
-        var c = io.connect(process.env.PORT, {query: this.state.time});
-        console.log('c', c);
-        socket.emit('entering room', {
-          room: 'GUDETAMA ' + this.state.room
-        });
+  }
+
+  addRoom() {
+    //IF YOU ADD TWO ROOMS, MAKE SURE YOU LEAVE THE FIRST
+    //BEFORE JOINING THE SECOND
+    socket.emit('leaving room', {
+      room: 'GUDETAMA ' + this.state.room,
+    });
+
+    var playerRoom = prompt('Create or join a room:');
+
+    this.setState({
+      room: playerRoom,
+    }, () => {
+      socket.emit('entering room', {
+        room: 'GUDETAMA ' + this.state.room
       });
+    });
 
   }
 
@@ -57,8 +69,7 @@ class App extends React.Component {
 
   handleRoomNameClick(clickedRoom) {
     socket.emit('leaving room', {
-      room: this.state.room,
-      username: undefined,
+      room: 'GUDETAMA ' + this.state.room,
     });
     console.log(clickedRoom);
     this.setState({
@@ -86,14 +97,17 @@ class App extends React.Component {
           username={this.state.username}
           handleUserNameChange={this.handleUserNameChange}
           handleRoomNameClick={this.handleRoomNameClick}
-          socket={socket}/> 
+          socket={socket}
+          addRoom={this.addRoom}/> 
         }/>
         <Route path = '/game' render = {
           (props) => {
             return (<div>
               <nav>
                 <h1>SAVE GUDETAMA!</h1>
+                <div>
                 <button onClick = {() => {this.logout()}} >Logout</button>
+                </div>
               </nav>  
               <div className="game-container">
                 <Game {...props} socket={socket} room={this.state.room} username={this.state.username} handleUserNameChange={this.handleUserNameChange}/>

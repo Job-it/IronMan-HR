@@ -108,18 +108,14 @@ io.on('connection', (socket) => {
 
   socket.on('entering room', (data) => {
     socket.join(data.room);
+    console.log('entering room', data.room, socket.id);
     console.log(io.sockets.adapter.rooms);
   });
 
   socket.on('leaving room', (data) => {
     socket.leave(data.room);
-    if (data.username !== undefined) {
-      rooms[data.room][data.username] = 0;
-    }
-    if (getPlayerCount(data.room) === 0) {
-      delete rooms[data.room];
-    }
     console.log('leaving room, rooms is', rooms);
+    console.log(io.sockets.adapter.rooms);
   });
 
   socket.on('ready', (data) => {
