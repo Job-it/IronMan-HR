@@ -12,8 +12,8 @@ import Spectator from './components/Spectator.jsx';
 const io = require('socket.io-client'); 
 const socket = io();
 
-var c = io.connect(process.env.PORT);
-console.log('c', c);
+// var c = io.connect(process.env.PORT);
+// console.log('c', c);
 
 class App extends React.Component {
   constructor(props) {
@@ -67,8 +67,8 @@ class App extends React.Component {
     this.setState({
       room: clickedRoom,
     }, () => {
-      var c = io.connect(process.env.PORT, {query: this.state.time});
-      console.log('c', c);
+      // var c = io.connect(process.env.PORT, {query: this.state.time});
+      // console.log('c', c);
       socket.emit('entering room', {
         room: clickedRoom,
         username: this.state.username
