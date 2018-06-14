@@ -71,12 +71,16 @@ app.get('/dictionary', (req, res) => {
 
 var port = process.env.PORT || 5000;
 
-var certOptions = {
-  key: fs.readFileSync(path.resolve('server.key')),
-  cert: fs.readFileSync(path.resolve('server.crt'))
-}
+// var certOptions = {
+//   key: fs.readFileSync(path.resolve('server.key')),
+//   cert: fs.readFileSync(path.resolve('server.crt'))
+// }
 
-var server = https.createServer(certOptions, app).listen(port, function() {
+// var server = https.createServer(certOptions, app).listen(port, function() {
+//   console.log(`listening on port ${port}!`);
+// });
+
+app.listen(port, () => {
   console.log(`listening on port ${port}!`);
 });
 
