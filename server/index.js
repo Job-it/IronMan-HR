@@ -138,6 +138,7 @@ io.on('connection', (socket) => {
   socket.on('entering room', (data) => {
     // console.log(data.room);
     //Create socket for client
+    socket.leave('GUDETAMA lobby');
     socket.join(data.room);
     //Add player to not-ready state
     rooms[data.room].playersNotReady.push(data.username); 
