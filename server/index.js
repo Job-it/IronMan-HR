@@ -76,9 +76,9 @@ var port = process.env.PORT || 5000;
 //   cert: fs.readFileSync(path.resolve('server.crt'))
 // }
 
-// var server = https.createServer(certOptions, app).listen(port, function() {
-//   console.log(`listening on port ${port}!`);
-// });
+var server = https.createServer(app).listen(port, function() {
+  console.log(`listening on port ${port}!`);
+});
 
 var server = app.listen(port, () => {
   console.log(`listening on port ${port}!`);
