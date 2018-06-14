@@ -280,3 +280,37 @@ input {
   width: 90%;
   padding: 0;
 }
+
+.facebook-login {
+  display: flex;
+  justify-content: center;
+  padding-top: 40vh;
+  text-align: center;
+  align-items: center;
+}
+
+.login-box {
+  display: flex;
+  align-items: center;
+  border: solid 2px #ffffff;
+  border-radius: 4px;
+  background-color: #4267b2;
+  padding: 12px 25px 12px 25px;
+}
+
+.login-text {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.login-text:hover {
+  text-decoration: underline;
+}
+
+.facebook-login-logo {
+  height: 26px;
+  width: 26px;
+  margin-right: 20px;
+  border: solid 1px #ffffff;
+  border-radius: 2px;
+}
