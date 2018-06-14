@@ -1,4 +1,5 @@
 import React from 'react';
+import {Trail} from 'react-spring';
 import axios from 'axios';
 
 
@@ -62,17 +63,20 @@ class Lobby extends React.Component {
         {this.state.userNameSubmitted ? <button onClick = {() => {this.addRoomAndGetNewRooms()}} >Add Room</button> : <div></div>}
         <div>Room List: </div>
         <ul>
-          { Object.keys(this.state.rooms).map((room) => {
-            return (
-              <li className = 'room-details' onClick={() => this.props.handleRoomNameClick(room) }>
-                <span>{room}</span>
-                <br/>
-                <span className = 'tiny-details'>In the room: {this.state.rooms[room].playersNotReady.length === 0 ? 'NOONE | ' : this.state.rooms[room].playersNotReady + ' | '}</span>
-                <span className = 'tiny-details'>Ready to play: {this.state.rooms[room].playersReady.length === 0 ? 'NOONE | ' : this.state.rooms[room].playersReady + ' | '}</span>
-                <span className = 'tiny-details'>Watching the action: {this.state.rooms[room].spectators.length === 0 ? 'NOONE | ' : this.state.rooms[room].spectators + ' | '}</span>
-              </li>
-            )
-          }) }
+          <Trail from={{ opacity: 0 }} to={{ opacity: 1 }} keys = {Object.keys(this.state.rooms).map(room => room)}>
+            { Object.keys(this.state.rooms).map((room) => styles => {
+              return (
+                <li style = {styles} className = 'room-details' onClick={() => this.props.handleRoomNameClick(room) }>
+                  <span>{room}</span>
+                  <br/>
+                  <span className = 'tiny-details'>In the room: {this.state.rooms[room].playersNotReady.length === 0 ? 'NOONE | ' : this.state.rooms[room].playersNotReady + ' | '}</span>
+                  <span className = 'tiny-details'>Ready to play: {this.state.rooms[room].playersReady.length === 0 ? 'NOONE | ' : this.state.rooms[room].playersReady + ' | '}</span>
+                  <span className = 'tiny-details'>Watching the action: {this.state.rooms[room].spectators.length === 0 ? 'NOONE | ' : this.state.rooms[room].spectators + ' | '}</span>
+                </li>
+              )
+            }) }
+          </Trail>
+          
         </ul>
       </div>
     )
