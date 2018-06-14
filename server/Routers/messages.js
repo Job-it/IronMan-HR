@@ -10,7 +10,6 @@ messageRouter.get('/', (req,res) => {
 });
 
 messageRouter.post('/', (req,res) => {
-  console.log(req)
   saveMessage(req.body).then((results) => {
     res.status(200).send(results);
   }).catch((err) => {

@@ -1,11 +1,11 @@
 var express = require('express');
 var session = require('express-session');
+var https = require('https');
 var bodyParser = require('body-parser');
 var {retrieveUsers, addUserOrUpdateScore, get1000Words} = require('../database/index.js');
 var passport = require('./fbAuth');
 var fs = require('fs');
 var path = require('path');
-var https = require('https');
 var app = express();
 var authMiddleware = require('./authMiddleWare.js');
 var messageRouter = require('./Routers/messages.js')
@@ -80,13 +80,17 @@ var server = https.createServer(certOptions, app).listen(port, function() {
   console.log(`listening on port ${port}!`);
 });
 
+// START SOCKET FUNCTIONALITY
+var io = require('socket.io')(server);
+
+// var server = app.listen(port, () => {
+//   console.log(`listening on port ${port}!`);
+// });
+
 // MESSAGES ROUTER
 
 app.use('/messages', messageRouter);
 
-// START SOCKET FUNCTIONALITY
-
-var io = require('socket.io')(server);
 
 // ROOMS STORAGE OBJECT 
 // EXAMPLE ROOM:
@@ -138,6 +142,7 @@ io.on('connection', (socket) => {
   socket.on('entering room', (data) => {
     // console.log(data.room);
     //Create socket for client
+    socket.leave('GUDETAMA lobby');
     socket.join(data.room);
     //Add player to not-ready state
     rooms[data.room].playersNotReady.push(data.username); 
