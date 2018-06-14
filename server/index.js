@@ -80,7 +80,7 @@ var port = process.env.PORT || 5000;
 //   console.log(`listening on port ${port}!`);
 // });
 
-app.listen(port, () => {
+var server = app.listen(port, () => {
   console.log(`listening on port ${port}!`);
 });
 
