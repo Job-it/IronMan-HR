@@ -1,14 +1,13 @@
 const mysql = require('mysql');
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
 
 const connection = mysql.createConnection({
-  host: 'ironman.crb3zmhwoovo.us-east-1.rds.amazonaws.com',
-  user: 'IronMan', 
-  password: 'IronMan-HR', 
-  database: 'humptydumpty',
-  port: 3306,
-  timeout: 6000,
+  host: process.env.DB_LOCATION,
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASS,
+  database: 'humptydumpty'
 });
 
 connection.connect(function(err) {
@@ -103,15 +102,15 @@ const retrieveUsers = function(callback) {
 
 //check if a user has played before, and add or update accordingly
 const addUserOrUpdateScore = function(userWithScore, callback) {
-  let queryStr = `SELECT * FROM users WHERE username = '${userWithScore.username}'`;
-  connection.query(queryStr, (err, result) => {
+  let queryStr = 'SELECT * FROM users WHERE username = ?';
+  connection.query(queryStr, [userWithScore.username], (err, result) => {
     if (err) {
       console.error('error retrieving user from database', err);
     } else {
       if (result.length === 0) {
         // if new user, add them to the database
-        let queryStr2 = `INSERT INTO users (username, high_score) VALUES ('${userWithScore.username}', ${userWithScore.high_score})`;
-        connection.query(queryStr2, (err) => {
+        let queryStr2 = 'INSERT INTO users (username, high_score) VALUES (?, ?)';
+        connection.query(queryStr2, [userWithScore.username, userWithScore.high_score], (err) => {
           if (err) {
             console.error('error inserting high score into DB', err);
           } else {
@@ -120,8 +119,8 @@ const addUserOrUpdateScore = function(userWithScore, callback) {
         });
       } else {
         // else only update if user beat their personal best score
-        let queryStr3 = `UPDATE users SET high_score = ${userWithScore.high_score} WHERE username='${userWithScore.username}' AND high_score < ${userWithScore.high_score}`;
-        connection.query(queryStr3, (err, result) => {
+        let queryStr3 = 'UPDATE users SET high_score = ? WHERE username = ? AND high_score < ?';
+        connection.query(queryStr3, [userWithScore.high_score, userWithScore.username, userWithScore.high_score], (err, result) => {
           if (err) {
             console.error('error updating high score', err);
           } else if (result.changedRows === 0) {
@@ -135,6 +134,30 @@ const addUserOrUpdateScore = function(userWithScore, callback) {
   })  
 }
 
+const saveMessage = ({message, username, room}) => {
+  return new Promise((resolve, reject) => {
+    connection.query('INSERT INTO messages (username, message, room) VALUES (?, ?, ?)', [username, message, room], (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};
+
+const getMessages = ({room}) => {
+  return new Promise((resolve, reject) => {
+    connection.query(`SELECT * FROM messages where room = ?`, [room], (err, results) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+};
+
 // Below are tests to make sure database is working:
 //addUserOrUpdateScore({username: 'scott', high_score: 200});
 //addUserOrUpdateScore({username: 'egg', high_score: 99});
@@ -146,4 +169,6 @@ module.exports = {
   retrieveUsers,
   addUserOrUpdateScore,
   get1000Words,
+  saveMessage,
+  getMessages
 };

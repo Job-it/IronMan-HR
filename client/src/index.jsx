@@ -1,38 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Game from './components/Game.jsx';
-import Scoreboard from './components/Scoreboard.jsx';
+import App from './app.jsx';
+import { BrowserRouter } from 'react-router-dom';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      room: 'scottVsLina',
-      username: '',
-    }
-    this.handleUserNameChange = this.handleUserNameChange.bind(this);   
-  }
-
-  handleUserNameChange(e) {
-    this.setState({
-      username: e.target.value,
-    });
-  }
-
-  render() {
-    return (
-      <div className="app-container">
-        <nav>
-          <h1>SAVE GUDETAMA!</h1>
-        </nav>  
-        <div className="game-container">
-          <Game room={this.state.room} username={this.state.username} handleUserNameChange={this.handleUserNameChange}/>
-          <Scoreboard />
-        </div>
-      </div>
-    )
-  }
-}
-
-
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(
+<BrowserRouter>
+  <App location = { location }/>
+</BrowserRouter>, 
+document.getElementById('app'));

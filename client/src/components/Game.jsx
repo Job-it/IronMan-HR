@@ -1,8 +1,7 @@
 import React from 'react';
 import Brick from './Brick.jsx';
 import axios from 'axios';
-const io = require('socket.io-client'); 
-const socket = io();
+import {Spring} from 'react-spring';
 
 class Game extends React.Component {
   constructor(props) {
@@ -15,11 +14,18 @@ class Game extends React.Component {
       time: 0,
       timeInterval: 1000,
       round: 'all',
-      instructions: ["Humpty Dumpty sat on a wall,", "Humpty Dumpty had a great fall.", "All the king's horses and all the king's men", "Couldn't put Humpty together again.", "HURRY - KEEP TYPING TO PREVENT HIS DEMISE!"],
+      instructions: ["HURRY - KEEP TYPING TO PREVENT HIS DEMISE!"],
       prompt: 'START GAME',
-      opponentTime: 0
+      opponentTime: 0,
+      userNameSelected: false,
+      gameover: false,
+      activePlayer: false,
+      opponentScore: 0,
+      opponentName: null,
+      opponentLost: false,
     }
     
+    this.goToLobby = this.goToLobby.bind(this);
     this.getReady = this.getReady.bind(this);
     this.startGame = this.startGame.bind(this);
     this.addWord = this.addWord.bind(this);
@@ -29,25 +35,42 @@ class Game extends React.Component {
     this.sendScore = this.sendScore.bind(this);
     this.stopGame = this.stopGame.bind(this);
 
-    var c = io.connect(process.env.PORT, {query: this.state.time})
-    console.log('c', c)
 
-    socket.on('receive words from opponent', (words) => {
-      this.updateOpponentWordList(words);
-    });
-    socket.on('startGame', () => {
-      this.startGame();
-    });
-    socket.on('they lost', (score) => {
-      // this is bad, eventually put a red x over their bricks or something
+    this.props.socket.on('receive words from opponent', (data) => {
+      if (!this.state.activePlayer) {
+        this.props.history.push('/spectator');
+      }
+      // this.updateOpponentWordList(data.newWords);
       this.setState({
-        opponentTime: score,
+        theirWords: data.newWords,
+        opponentScore: data.score,
+        opponentName: data.userName,
       })
+
+    });
+    this.props.socket.on('startGame', () => {
+      console.log('starting game...');
+      if (this.state.activePlayer) {
+        this.startGame();
+      } else {
+        this.props.history.push('/spectator');
+      }
+    });
+    this.props.socket.on('they lost', (data) => {
+ 
+      // document.getElementById('our-game').style.backgroundColor = "green";
       document.getElementById('their-game').style.backgroundColor = "red";
+      console.log(data);
+      this.setState({
+        opponentLost: true,
+      })
+      if (this.state.gameover === true) {
+        this.showGameoverOverlay();
+      }
     });
   }
 
-  // get words from dictionary and join socket
+  // get words from dictionary and join this.props.socket
   componentDidMount() {
     axios.get('/dictionary')
     .then(results => {
@@ -57,39 +80,45 @@ class Game extends React.Component {
     }).catch(err => {
       console.error(err);
     });
-    socket.emit('entering room', {
-      room: this.props.room, 
-      username: this.props.username
-    });
   }
 
   // sends your words to opponent
   componentDidUpdate(prevProps, prevState) {
     if (this.state.words.length !== prevState.words.length) {
-      socket.emit('send words to opponent', {
+      this.props.socket.emit('send words to opponent', {
         room: this.props.room,
         newWords: this.state.words,
+        userName: this.props.username,
+        score: this.state.time,
       }); 
     }
   }
 
-  // leave socket
+  // leave this.props.socket
   componentWillUnmount() {  
-    socket.emit('leaving room', {
+    this.props.socket.emit('leaving room', {
       room: this.props.room,
       username: this.props.username,
     });
   }
 
+  // submitUserName(e) {
+  //   e.preventDefault();
+  //   this.setState({
+  //     userNameSelected: true
+  //   })
+  // }
+
   // hides starter form and user input, waits for another player to start game
   getReady(e) {
     e.preventDefault();
-    document.getElementById('starter-form').disabled = true;
-    document.getElementById('user-input').disabled = true;
+    // document.getElementById('starter-form').disabled = true;
+    // document.getElementById('user-input').disabled = true;
     this.setState({
       prompt: 'WAITING...',
+      activePlayer: true,
     });
-    socket.emit('ready', {
+    this.props.socket.emit('ready', {
       room: this.props.room, 
       username: this.props.username
     });
@@ -124,7 +153,7 @@ class Game extends React.Component {
       if (this.state.words.length >= 20) {
         clearTimeout(step);
         //console.log('opponent time',this.state.time)
-        socket.emit('i lost', {
+        this.props.socket.emit('i lost', {
           room: this.props.room, 
           username: this.props.username, 
           score: this.state.time
@@ -142,13 +171,13 @@ class Game extends React.Component {
       if (newTime > 20) {
         this.setState({
           time: newTime,
-          timeInterval: 600,
+          // timeInterval: 600,
           //round: 'roundThree', // uncomment these to only serve short words at beginning, long words at end
         });
       } else if (newTime > 8) { 
         this.setState({
           time: newTime,
-          timeInterval: 800,
+          // timeInterval: 800,
           //round: 'roundTwo',
         });
       } else {
@@ -181,7 +210,7 @@ class Game extends React.Component {
   // updates your view of opponent's words
   updateOpponentWordList(words) {
     this.setState({
-      theirWords: words
+      theirWords: words,
     })
   }
 
@@ -225,6 +254,7 @@ class Game extends React.Component {
 
   // upon game over, sends username and score to database to be added/updated
   sendScore(username, score) {
+    console.log('sending score');
     axios.post('/wordgame', {
       "username": username,
       "high_score": score
@@ -236,18 +266,42 @@ class Game extends React.Component {
     })
   }
 
-  stopGame() {
-    document.getElementById('typing-input').disabled = true;
+  goToLobby() {
+    this.setState({
+      gameover: false
+    })
+    this.props.history.push('/lobby');
+  }
+
+  showGameoverOverlay() {
+
+    this.setState({
+      instructions: ['GAME OVER', `YOU SCORED: ${this.state.time}`, `YOUR OPPONENT SCORED: ${this.state.opponentScore}`],
+      prompt: 'Back to lobby',
+    });
     document.getElementById('overlay').style.display = "block";
+  }
+
+  stopGame() {
+
+    this.setState({
+      gameover: true
+    });
+
+    if(this.state.opponentLost === true) {
+      this.showGameoverOverlay();
+    }
+
+    document.getElementById('typing-input').disabled = true;
     document.getElementById('gudetama').style.display = "none";
     document.getElementById('their-gudetama').style.display = "none";
-    document.getElementById('starter-form').disabled = false;
-    document.getElementById('user-input').disabled = false;
+    // document.getElementById('starter-form').disabled = false;
+    // document.getElementById('user-input').disabled = false;
 
     // enables user to hit "enter" after 2 seconds to restart game
     setTimeout(() => {
       if (document.getElementById('overlay').display !== "none") {
-        document.getElementById('user-input').focus();
+        // document.getElementById('user-input').focus();
       }
     }, 2000);
     
@@ -255,12 +309,6 @@ class Game extends React.Component {
  
     // audio effect
     playGameOver();
-    
-    this.setState({
-      // maybe find a way to compare your score vs opponent's score and show YOU WIN/YOU LOSE
-      instructions: ['GAME OVER', `YOU SCORED: ${this.state.time}`, `YOUR OPPONENT SCORED: ${this.state.opponentTime}`],
-      prompt: 'REPLAY',
-    });
   }
 
   render() {
@@ -273,22 +321,20 @@ class Game extends React.Component {
             return (<span key={index}>{line}<br></br></span>)
           })}</div>
           <div id="crackedegg"></div>
-          <div>
-            {/* "getReady" waits for 2 players, "startGame" (on click) is 1 player */}
-            <form id="starter-form" onSubmit={this.getReady} autoComplete="off">
-              <input id="user-input" placeholder="Who are you?" value={this.props.username} onChange={this.props.handleUserNameChange} autoFocus/>
+          {/* <div>
+            "getReady" waits for 2 players, "startGame" (on click) is 1 player
+            <form id="starter-form" onSubmit={(e) => {this.submitUserName(e)}} autoComplete="off">
+              {this.userNameSelected ? <div></div> : <input id="user-input" placeholder="Who are you?" onChange={this.props.handleUserNameChange} autoFocus/>}
+              <button type = "submit"> Select Username </button>
             </form>
-          </div>
-          <div id="overlay-start" onClick={this.startGame} className="blinking">{this.state.prompt}</div>
-        </div>
-    
-        <div className="timer">
-          <h1>{this.state.time}</h1>
+          </div> */}
+          <div id="overlay-start" onClick={this.state.gameover ? this.goToLobby : this.getReady } className="blinking">{this.state.prompt}</div>
         </div>
 
         <div className="board">
           {/* your game: */}
           <div className="play"> 
+            <div className="timer"><h1>{this.state.time}</h1></div>
             {this.state.words.map((word, index) => {
               return <Brick word={word} key={index} />
             })}
@@ -300,12 +346,13 @@ class Game extends React.Component {
 
           {/* their game: */}
           <div className="play" id="their-game"> 
+            <div className="timer"><h1>{this.state.opponentScore}</h1></div>
             {this.state.theirWords.map((word, index) => {
-              return <Brick word={word} key={index} />
+              return <Brick word = { word } key = { index } />
             })}
             <div id="their-gudetama"></div>
             <form autoComplete="off">
-              <input value="OPPONENT" />
+              <input value={this.state.opponentName} />
             </form>
           </div>
         </div>

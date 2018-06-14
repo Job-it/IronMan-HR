@@ -18,6 +18,14 @@ html, body, #app, .app-container {
   background: url("./assets/treebackground.png") center/cover;
 }
 
+input {
+  font-family: "Press Start 2P", cursive;
+}
+
+.app-container > div {
+  height: 100%;
+}
+
 #app {
   padding: 10px;
 }
@@ -25,8 +33,9 @@ html, body, #app, .app-container {
 #overlay {
   position: fixed;
   display: block;
-  height: 75%;
+  height: 40%;
   width: 65%;
+  max-width: 275px;
   top: 0; 
   left: 0;
   right: 0;
@@ -86,10 +95,6 @@ nav {
 
 .game {
   width: 70%;
-}
-
-.scoreboard {
-  width: 30%;
 }
 
 .timer {
@@ -153,9 +158,10 @@ input {
 }
 
 #crackedegg {
-  width: 45%;
-  height: 45%;
+  height: 30%;
   background: url("./assets/gudetama-cracked.gif") no-repeat center/cover;
+  display: block;
+  margin: 0 auto;
 }
 
 .sbColumn {
@@ -179,4 +185,98 @@ input {
 
 .sbHeader{
   margin-left: 70px
+}
+
+.tiny-details {
+  /* font-size: 7px; */
+}
+
+.room-details {
+  margin-top: 15px;
+}
+
+
+.chat-box {
+  min-width: 100px;
+  margin: 20px 0 20px 0;
+  width: 20%;
+  height: 100%;
+  background-color: #ffffff;
+  border: solid 3px #e0e0e0;
+  border-radius: 6px;
+}
+
+.messages {
+  overflow: scroll;
+  height: 100%;
+}
+
+.scoreboard{
+  overflow: auto;
+  height: 45%;
+}
+
+.in-game-chat-wrapper{
+  height: 40%;
+}
+
+.sidebar-wrapper{
+  width: 30%;
+}
+
+.in-game-chat-wrapper .chat-box{
+  width: 100%;
+}
+
+.lobby-display {
+  display: flex;
+  justify-content: space-between;
+}
+
+#lobby-room-list-wrapper {
+  width: 50%;
+}
+
+#lobby-room-list {
+  min-height: 80%;
+}
+
+#lobby-room-list h2 {
+  padding: 10px 0 0 10px;
+  text-align: center;
+}
+
+#lobby-room-list ul li {
+  text-align: center;
+  background: url("./assets/bricklayer.PNG") no-repeat center/cover;
+  color: white;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: rgba(0,0,0,.5);
+}
+
+#lobby-room-list ul li:hover {
+  cursor: pointer;
+  color: yellow;
+}
+
+.room-name-header{
+  font-size: 1.5em;
+}
+
+.send-message {
+  height: 4vh;
+  margin: 0 auto;
+}
+
+.message-input {
+  margin-top: 30px;
+}
+
+.message-list {
+  margin: 0 auto;
+  height: 80%;
+  width: 90%;
+  padding: 0;
 }

@@ -9,3 +9,10 @@ CREATE TABLE users (
   username VARCHAR(100),
   high_score INTEGER
 );
+
+CREATE TABLE messages (
+  id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(100),
+  message VARCHAR(100),
+  room VARCHAR(100)
+);

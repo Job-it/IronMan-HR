@@ -5,16 +5,16 @@
 		<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
 	</head>
 	<audio id="correct">
-		<source src="./assets/correct.wav" type="audio/mpeg">
+		<source src="./assets" type="audio/mpeg">
 	</audio>
 	<audio id="wrong">
-		<source src="./assets/wrong.wav" type="audio/mpeg">
+		<source src="./assets/" type="audio/mpeg">
 	</audio> 
 	<audio id="game-over">
-		<source src="./assets/game_over.wav" type="audio/mpeg">
+		<source src="./assets/" type="audio/mpeg">
 	</audio> 
 	<audio id="start">
-		<source src="./assets/start.mp3" type="audio/mpeg">
+		<source src="./assets/" type="audio/mpeg">
 	</audio>
 	<script>
 		var correct = document.getElementById("correct")
@@ -47,9 +47,32 @@
 			  start.stop()
 		}
 
-	</script>
+  </script>
+
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '1904943516252195',
+        cookie     : true,
+        xfbml      : true,
+        version    : '3.0'
+      });
+        
+      FB.AppEvents.logPageView();   
+        
+    };
+  
+    (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
+
 	<body>		
 		<div id="app"></div>
-		<script type="text/javascript" src="bundle.js"></script>
-	</body>
+    <script type="text/javascript" src="bundle.js"></script>
+  </body>
 </html>
