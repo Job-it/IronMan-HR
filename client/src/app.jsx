@@ -26,6 +26,7 @@ class App extends React.Component {
     this.handleUserNameChange = this.handleUserNameChange.bind(this);
     this.handleRoomNameClick = this.handleRoomNameClick.bind(this);
     this.addRoom = this.addRoom.bind(this);
+    this.setRoomToLobby = this.setRoomToLobby.bind(this);
   }
 
   componentDidMount() {
@@ -45,22 +46,21 @@ class App extends React.Component {
   }
 
   addRoom() {
-    //IF YOU ADD TWO ROOMS, MAKE SURE YOU LEAVE THE FIRST
-    //BEFORE JOINING THE SECOND
-    socket.emit('leaving room', {
-      room: 'GUDETAMA ' + this.state.room,
-    });
-
     var playerRoom = prompt('Create or join a room:');
-
     axios.post('/rooms', {newRoom: playerRoom});
-
   }
 
   handleUserNameChange(e) {
     this.setState({
       username: e.target.value,
     });
+  }
+
+  setRoomToLobby() {
+    this.setState({
+      room: 'GUDETAMA lobby',
+    })
+    this.props.socket.emit('entering lobby', {room: 'GUDETAMA lobby'});
   }
 
   handleRoomNameClick(clickedRoom) {
@@ -111,7 +111,7 @@ class App extends React.Component {
                 <h1>SAVE GUDETAMA!</h1>
               </nav>  
               <div className="game-container">
-                <Game {...props} socket={socket} room={this.state.room} username={this.state.username} handleUserNameChange={this.handleUserNameChange} history = {this.props.history}/>
+                <Game {...props} socket={socket} room={this.state.room} setRoomToLobby={this.setRoomToLobby} username={this.state.username} handleUserNameChange={this.handleUserNameChange} history = {this.props.history}/>
                 <div className='sidebar-wrapper'>
                   <Scoreboard {...props} />
                   <div className='in-game-chat-wrapper'><Chat {...props} room = {this.state.room} username = {this.state.username} socket={socket} /></div>
@@ -125,12 +125,9 @@ class App extends React.Component {
             return (<div>
               <nav>
                 <h1>SAVE GUDETAMA!</h1>
-                <div>
-                <button onClick = {() => {this.logout()}} >Logout</button>
-                </div>
               </nav>  
               <div className="game-container">
-                <Spectator {...props} socket={socket} room={this.state.room} username={this.state.username} handleUserNameChange={this.handleUserNameChange} history = {this.props.history}/>
+                <Spectator {...props} socket={socket} room={this.state.room} setRoomToLobby={this.setRoomToLobby} username={this.state.username} handleUserNameChange={this.handleUserNameChange} history = {this.props.history}/>
                 <div className='sidebar-wrapper'>
                   <Scoreboard {...props} />
                   <div className='in-game-chat-wrapper'><Chat {...props} room = {this.state.room} username = {this.state.username} socket={socket} /></div>
