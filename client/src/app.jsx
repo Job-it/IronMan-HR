@@ -21,8 +21,8 @@ class App extends React.Component {
     this.state = {
       room: 'GUDETAMA lobby',
       username: false,
-      userNameSubmitted: false
-    }
+      userNameSubmitted: false,
+    };
     this.handleUserNameChange = this.handleUserNameChange.bind(this);
     this.handleRoomNameClick = this.handleRoomNameClick.bind(this);
     this.addRoom = this.addRoom.bind(this);
