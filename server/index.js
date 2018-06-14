@@ -134,7 +134,9 @@ io.on('connection', (socket) => {
 
   socket.on('entering lobby', (data) => {
     //Create socket for client
+    console.log(data.room);
     socket.join(data.room);
+    console.log('joined lobby');
   });
 
 // When the client emits the 'entering room' event join the socket into that room
@@ -149,15 +151,18 @@ io.on('connection', (socket) => {
   });
 
 // @Dev team - this is not needed for right now, connection / room is ended when game is over
-  socket.on('leaving room', (data) => {
-    // Users are not part of a room until they click on that room
-    // Please note that this will be used in the future when we need to allow room changing.
-    // socket.leave(data.room);
-    // if (rooms[data.room]) {
-    //   rooms[data.room] = rooms[data.room].filter((user) => user !== data.username);
-    // }
-    // console.log('LEAVING A ROOM, THESE ARE THE ROOMS', io.sockets.adapter.rooms);
-  });
+socket.on('leaving room', (data) => {
+  // Users are not part of a room until they click on that room
+  // Please note that this will be used in the future when we need to allow room changing.
+  socket.leave(data.room);
+  console.log(data.username, 'left', data.room);
+  if (data.username !== undefined) { 
+    rooms[data.room].playersNotReady = rooms[data.room].spectators.filter((user) => user !== data.username);
+    rooms[data.room].playersNotReady = rooms[data.room].playersNotReady.filter((user) => user !== data.username);
+    rooms[data.room].playersNotReady = rooms[data.room].playersReady.filter((user) => user !== data.username);
+  }
+  // console.log('LEAVING A ROOM, THESE ARE THE ROOMS', io.sockets.adapter.rooms);
+});
 
   socket.on('ready', (data) => {
     // Move the user from NOTREADY to READY in the room

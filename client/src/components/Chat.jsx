@@ -26,6 +26,7 @@ class Chat extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props.room);
     axios.get(`/messages?room=${this.props.room}`).then((response) => {
       this.setState({
         messages: response.data
