@@ -18,6 +18,10 @@ html, body, #app, .app-container {
   background: url("./assets/treebackground.png") center/cover;
 }
 
+input {
+  font-family: "Press Start 2P", cursive;
+}
+
 .app-container > div {
   height: 100%;
 }
@@ -184,12 +188,13 @@ input {
 }
 
 .tiny-details {
-  font-size: 7px;
+  /* font-size: 7px; */
 }
 
 .room-details {
   margin-top: 15px;
 }
+
 
 .chat-box {
   min-width: 100px;
@@ -226,6 +231,38 @@ input {
 .lobby-display {
   display: flex;
   justify-content: space-between;
+}
+
+#lobby-room-list-wrapper {
+  width: 50%;
+}
+
+#lobby-room-list {
+  min-height: 80%;
+}
+
+#lobby-room-list h2 {
+  padding: 10px 0 0 10px;
+  text-align: center;
+}
+
+#lobby-room-list ul li {
+  text-align: center;
+  background: url("./assets/bricklayer.PNG") no-repeat center/cover;
+  color: white;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: rgba(0,0,0,.5);
+}
+
+#lobby-room-list ul li:hover {
+  cursor: pointer;
+  color: yellow;
+}
+
+.room-name-header{
+  font-size: 1.5em;
 }
 
 .send-message {
