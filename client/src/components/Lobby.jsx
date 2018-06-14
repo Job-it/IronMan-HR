@@ -9,26 +9,23 @@ class Lobby extends React.Component {
     this.state = {
       customRoomName: '',
       rooms: [],
-      userNameSubmitted: false,
       roomNameInput: ''
     }
 
     this.getGameRoomsAndSetState = this.getGameRoomsAndSetState.bind(this);
-    this.handleUserNameSubmit = this.handleUserNameSubmit.bind(this);
   }
 
   componentDidMount() {
     this.props.socket.emit('entering lobby', {room: 'GUDETAMA lobby'});
   }
 
-  handleUserNameSubmit(e) {
-    e.preventDefault();
-    console.log('submitted');
-    this.setState({
-      userNameSubmitted: true
-    });
-    this.getGameRoomsAndSetState();
-  }
+
+  // Deprecated --> potentially use for setting nicknames
+  // handleUserNameSubmit(e) {
+  //   e.preventDefault();
+  //   console.log('submitted');
+  //   this.getGameRoomsAndSetState();
+  // }
 
   handleRoomNameChange(e) {
     this.setState({
@@ -55,12 +52,12 @@ class Lobby extends React.Component {
   render() {
     return (
       <div id='lobby-room-list-wrapper'>
-        {this.state.userNameSubmitted ? <div></div> : <form id="starter-form" onSubmit={(e) => this.handleUserNameSubmit(e)} autoComplete="off">
+        {/* {this.state.userNameSubmitted ? <div></div> : <form id="starter-form" onSubmit={(e) => this.handleUserNameSubmit(e)} autoComplete="off">
           <input id="user-input" placeholder="Who are you?" onChange={this.props.handleUserNameChange} autoFocus/>
-        </form>}
+        </form>} */}
         <button onClick = {this.props.handleLogout}>Logout</button>
         <button onClick = {this.getGameRoomsAndSetState}>Update Room List</button>
-        {this.state.userNameSubmitted ? <button onClick = {() => {this.addRoomAndGetNewRooms()}} >Add Room</button> : <div></div>}
+        <button onClick = {() => {this.addRoomAndGetNewRooms()}} >Add Room</button>
         <div id='lobby-room-list'>
         <h2>Game Rooms:</h2>
           <ul>

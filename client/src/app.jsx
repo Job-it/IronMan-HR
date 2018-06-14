@@ -20,8 +20,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       room: 'GUDETAMA lobby',
-      username: false,
-      userNameSubmitted: false
+      username: false
     }
     this.handleUserNameChange = this.handleUserNameChange.bind(this);
     this.handleRoomNameClick = this.handleRoomNameClick.bind(this);
@@ -33,6 +32,9 @@ class App extends React.Component {
       .then((response) => {
         if (response.headers.user) {
           var user = JSON.parse(response.headers.user);
+          this.setState({
+            username: user.displayName
+          })
         } else {
           var user = undefined;
         }
