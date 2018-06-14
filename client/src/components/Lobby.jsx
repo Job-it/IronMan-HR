@@ -53,26 +53,28 @@ class Lobby extends React.Component {
 
   render() {
     return (
-      <div>
+      <div id='lobby-room-list-wrapper'>
         {this.state.userNameSubmitted ? <div></div> : <form id="starter-form" onSubmit={(e) => this.handleUserNameSubmit(e)} autoComplete="off">
           <input id="user-input" placeholder="Who are you?" onChange={this.props.handleUserNameChange} autoFocus/>
         </form>}
         <button onClick={this.getGameRoomsAndSetState}>Update Room List</button>
         {this.state.userNameSubmitted ? <button onClick = {() => {this.addRoomAndGetNewRooms()}} >Add Room</button> : <div></div>}
-        <div>Room List: </div>
-        <ul>
-          { Object.keys(this.state.rooms).map((room) => {
-            return (
-              <li className = 'room-details' onClick={() => this.props.handleRoomNameClick(room) }>
-                <span>{room}</span>
-                <br/>
-                <span className = 'tiny-details'>In the room: {this.state.rooms[room].playersNotReady.length === 0 ? 'NOONE | ' : this.state.rooms[room].playersNotReady + ' | '}</span>
-                <span className = 'tiny-details'>Ready to play: {this.state.rooms[room].playersReady.length === 0 ? 'NOONE | ' : this.state.rooms[room].playersReady + ' | '}</span>
-                <span className = 'tiny-details'>Watching the action: {this.state.rooms[room].spectators.length === 0 ? 'NOONE | ' : this.state.rooms[room].spectators + ' | '}</span>
-              </li>
-            )
-          }) }
-        </ul>
+        <div id='lobby-room-list'>
+        <h2>Game Rooms:</h2>
+          <ul>
+            { Object.keys(this.state.rooms).map((room) => {
+              return (
+                <li className = 'room-details' onClick={() => this.props.handleRoomNameClick(room) }>
+                  <span className = 'room-name-header'>{room}</span>
+                  <br/>
+                  <span className = 'tiny-details'>In Room: {this.state.rooms[room].playersNotReady.length === 0 ? 'NO ONE | ' : this.state.rooms[room].playersNotReady + ' | '}</span>
+                  <span className = 'tiny-details'>Ready: {this.state.rooms[room].playersReady.length === 0 ? 'NO ONE | ' : this.state.rooms[room].playersReady + ' | '}</span>
+                  <span className = 'tiny-details'>Watching: {this.state.rooms[room].spectators.length === 0 ? 'NO ONE | ' : this.state.rooms[room].spectators}</span>
+                </li>
+              )
+            }) }
+          </ul>
+        </div>
       </div>
     )
   }
