@@ -195,8 +195,6 @@ class Spectator extends React.Component {
   render() {
     return (
       <div className="game">
-      <div><button className='back-to-lobby-btn' onClick={()=> this.goToLobby()}>Back to Lobby</button></div>
-
         {/* <div id="overlay">
           <div>{this.state.instructions.map((line, index) => {
             // audio effect:
@@ -233,6 +231,7 @@ class Spectator extends React.Component {
             </form>
           </div>
         </div>
+        <div><button className='back-to-lobby-btn' onClick={()=> this.goToLobby()}>Back to Lobby</button></div>
       </div>
     )
   }

@@ -275,9 +275,48 @@ input {
   color: white;
   background: #881400;
   cursor: pointer;
-  font-size: 1.5em;
   text-shadow: 0px 0px 5px #000;
   text-transform: uppercase;
+  display: block;
+  margin: 0 auto;
+}
+
+.lobby-room-btns{
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.lobby-room-btns button:hover{
+  background-color: goldenrod;
+  cursor: pointer;
+}
+
+.lobby-user-info {
+  padding-left: 10px;
+  width: 100%;
+}
+
+.lobby-user-info button {
+  float: left;
+}
+
+.lobby-user-info button:hover {
+  float: left;
+  cursor: pointer;
+  background-color: red;
+}
+
+.lobby-user-info p {
+  float: right;
+  color: lightseagreen;;
+  border-radius: 5px;
+}
+
+#game-room-header {
+  clear: both;
 }
 
 .back-to-lobby-btn:hover {
