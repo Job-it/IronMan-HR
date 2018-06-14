@@ -5,7 +5,6 @@ var {retrieveUsers, addUserOrUpdateScore, get1000Words} = require('../database/i
 var passport = require('./fbAuth');
 var fs = require('fs');
 var path = require('path');
-var https = require('https');
 var app = express();
 var authMiddleware = require('./authMiddleWare.js');
 var messageRouter = require('./Routers/messages.js')
@@ -76,9 +75,12 @@ var port = process.env.PORT || 5000;
 //   cert: fs.readFileSync(path.resolve('server.crt'))
 // }
 
-var server = https.createServer(app).listen(port, function() {
+var server = app.listen(port, function() {
   console.log(`listening on port ${port}!`);
 });
+
+// START SOCKET FUNCTIONALITY
+var io = require('socket.io')(server);
 
 // var server = app.listen(port, () => {
 //   console.log(`listening on port ${port}!`);
@@ -88,9 +90,6 @@ var server = https.createServer(app).listen(port, function() {
 
 app.use('/messages', messageRouter);
 
-// START SOCKET FUNCTIONALITY
-
-var io = require('socket.io')(server);
 
 // ROOMS STORAGE OBJECT 
 // EXAMPLE ROOM:
