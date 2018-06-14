@@ -2,19 +2,21 @@
 <html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="style.css">
-		<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/emojione@3.1.4/lib/js/emojione.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emojione@3.1.4/extras/css/emojione.min.css"/>
 	</head>
 	<audio id="correct">
-		<source src="./assets" type="audio/mpeg">
+		<source src="/assets" type="audio/mpeg">
 	</audio>
 	<audio id="wrong">
-		<source src="./assets/" type="audio/mpeg">
+		<source src="/assets" type="audio/mpeg">
 	</audio> 
 	<audio id="game-over">
-		<source src="./assets/" type="audio/mpeg">
+		<source src="/assets" type="audio/mpeg">
 	</audio> 
 	<audio id="start">
-		<source src="./assets/" type="audio/mpeg">
+		<source src="/assets" type="audio/mpeg">
 	</audio>
 	<script>
 		var correct = document.getElementById("correct")
@@ -46,33 +48,36 @@
 		function stopStart() {
 			  start.stop()
 		}
-
-  </script>
-
-  <script>
-    window.fbAsyncInit = function() {
-      FB.init({
-        appId      : '1904943516252195',
-        cookie     : true,
-        xfbml      : true,
-        version    : '3.0'
-      });
-        
-      FB.AppEvents.logPageView();   
-        
-    };
-  
-    (function(d, s, id){
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) {return;}
-      js = d.createElement(s); js.id = id;
-      js.src = "https://connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
   </script>
 
 	<body>		
-		<div id="app"></div>
+
+    <script>
+        window.fbAsyncInit = function() {
+          FB.init({
+            appId      : '1904943516252195',
+            cookie     : true,
+            xfbml      : true,
+            version    : 'v3.0'
+          });
+            
+          
+        };
+      
+        (function(d, s, id){
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) {return;}
+          js = d.createElement(s); js.id = id;
+          js.src = "https://connect.facebook.net/en_US/sdk.js";
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+      </script>
+
+    <div id="fb-root"></div>
+
+    <div id="app"></div>
+    
     <script type="text/javascript" src="bundle.js"></script>
+
   </body>
 </html>

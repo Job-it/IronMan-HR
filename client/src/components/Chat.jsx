@@ -1,12 +1,14 @@
 import React from 'react';
 import axios from 'axios';
+import { Picker } from 'emoji-mart'
 
 class Chat extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       messages: [],
-      userInput: ''
+      userInput: '',
+      emojiSelectorIsOpen: false
     }
 
     this.props.socket.on('recieve message', (messageObj) => {
@@ -57,6 +59,18 @@ class Chat extends React.Component {
     })
   }
 
+  handleEmojiSelect(emoji) {
+    this.setState({
+      userInput: this.state.userInput + emoji.native
+    });
+  }
+
+  openEmojiSelector() {
+    this.setState({
+      emojiSelectorIsOpen: !this.state.emojiSelectorIsOpen
+    });
+  }
+
   render() {
     return (
       <div className = "chat-box">
@@ -65,7 +79,7 @@ class Chat extends React.Component {
             {this.state.messages.map((messageObj) => {
               return (
               <li>
-                <span className = "chat-username"> {messageObj.username}:  </span>
+                <span className = "chat-username">@{messageObj.username}:  </span>
                 <span className = "chat-message"> {messageObj.message} </span>
               </li>)
             })}
@@ -75,6 +89,8 @@ class Chat extends React.Component {
           <form className = 'send-message' onSubmit = {(e) => {this.handleSubmit(e)}}>
             <input className = 'message-input' type = 'text' onChange = {(e) => {this.handleChange(e)}} value = {this.state.userInput}></input>
           </form>
+          <div className = "emoji-opener" onClick = {() => {this.openEmojiSelector()}}>😜 Emoji Menu</div>
+          {this.state.emojiSelectorIsOpen ? <Picker style={{ width: '100%' }} onSelect = {(emoji) => {this.handleEmojiSelect(emoji)}} className = 'emoji-selector'/> : <div></div>}
         </div>
       </div>
     )
