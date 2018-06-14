@@ -10,6 +10,7 @@ const connection = mysql.createConnection({
   database: 'humptydumpty',
   port: 3306,
   timeout: 6000,
+  charset : 'utf8mb4'
 });
 
 connection.connect(function(err) {
