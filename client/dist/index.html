@@ -7,21 +7,20 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emojione@3.1.4/extras/css/emojione.min.css"/>
 	</head>
 	<audio id="correct">
-		<source src="/assets" type="audio/mpeg">
+		<source src="./assets/correct.wav" type="audio/mpeg">
 	</audio>
 	<audio id="wrong">
-		<source src="/assets" type="audio/mpeg">
+		<source src="./assets/wrong.wav" type="audio/mpeg">
 	</audio> 
 	<audio id="game-over">
-		<source src="/assets" type="audio/mpeg">
+		<source src="./assets/game_over.wav" type="audio/mpeg">
 	</audio> 
 	<audio id="start">
-		<source src="/assets" type="audio/mpeg">
+		<source src="./assets/start.mp3" type="audio/mpeg">
 	</audio>
 	<script>
 		var correct = document.getElementById("correct")
 		function playCorrect() {
-			  console.log('sound test')
 			  correct.play()
 		}
 
@@ -46,8 +45,33 @@
 		}
 
 		function stopStart() {
-			  start.stop()
+			  start.pause()
 		}
+<<<<<<< HEAD
+
+  </script>
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '1904943516252195',
+        cookie     : true,
+        xfbml      : true,
+        version    : '3.0'
+      });
+        
+      FB.AppEvents.logPageView();   
+        
+    };
+  
+    (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+=======
+>>>>>>> dev
   </script>
 
 	<body>		
