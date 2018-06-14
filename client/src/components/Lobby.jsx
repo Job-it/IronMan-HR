@@ -1,4 +1,5 @@
 import React from 'react';
+import {Trail} from 'react-spring';
 import axios from 'axios';
 
 
@@ -63,9 +64,10 @@ class Lobby extends React.Component {
         <div id='lobby-room-list'>
         <h2>Game Rooms:</h2>
           <ul>
-            { Object.keys(this.state.rooms).map((room) => {
+          <Trail from={{ opacity: 0 }} to={{ opacity: 1 }} keys = {Object.keys(this.state.rooms).map(room => room)}>
+            { Object.keys(this.state.rooms).map((room) => styles => {
               return (
-                <li className = 'room-details' onClick={() => this.props.handleRoomNameClick(room) }>
+                <li style = {styles} className = 'room-details' onClick={() => this.props.handleRoomNameClick(room) }>
                   <span className = 'room-name-header'>{room}</span>
                   <br/>
                   <span className = 'tiny-details'>In Room: {this.state.rooms[room].playersNotReady.length === 0 ? 'NO ONE | ' : this.state.rooms[room].playersNotReady + ' | '}</span>
@@ -74,6 +76,8 @@ class Lobby extends React.Component {
                 </li>
               )
             }) }
+          </Trail>
+          
           </ul>
         </div>
       </div>
