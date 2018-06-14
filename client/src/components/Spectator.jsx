@@ -74,13 +74,9 @@ class Spectator extends React.Component {
 
   // get words from dictionary and join this.props.socket
   componentDidMount() {
-    axios.get('/dictionary')
-    .then(results => {
-      this.setState({
-        dictionary: results.data,
-      })
-    }).catch(err => {
-      console.error(err);
+    this.props.socket.emit('entering room', {
+      room: this.props.room,
+      username: this.props.username,
     });
   }
 
@@ -91,13 +87,6 @@ class Spectator extends React.Component {
       username: this.props.username,
     });
   }
-
-  // submitUserName(e) {
-  //   e.preventDefault();
-  //   this.setState({
-  //     userNameSelected: true
-  //   })
-  // }
 
 
   // pulls random word from dictionary obj and adds it to words state
@@ -172,6 +161,7 @@ class Spectator extends React.Component {
       gameover: false
     })
     this.props.history.push('/lobby');
+    this.props.setRoomToLobby();
   }
 
   stopGame() {
@@ -205,6 +195,8 @@ class Spectator extends React.Component {
   render() {
     return (
       <div className="game">
+      <div><button className='back-to-lobby-btn' onClick={()=> this.goToLobby()}>Back to Lobby</button></div>
+
         {/* <div id="overlay">
           <div>{this.state.instructions.map((line, index) => {
             // audio effect:

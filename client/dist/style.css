@@ -18,7 +18,7 @@ html, body, #app, .app-container {
   background: url("./assets/treebackground.png") center/cover;
 }
 
-input {
+input, button {
   font-family: "Press Start 2P", cursive;
 }
 
@@ -259,6 +259,25 @@ input {
 #lobby-room-list ul li:hover {
   cursor: pointer;
   color: yellow;
+}
+
+.back-to-lobby-btn {
+  background: #7C7C7C;
+  border-bottom: 5px inset rgba(0,0,0,.5);
+  border-left: 5px inset rgba(0,0,0,.5);
+  border-right: 5px inset rgba(255,255,255,.5);
+  border-top: 5px inset rgba(255,255,255,.5);
+  box-sizing: border-box;
+  color: white;
+  background: #881400;
+  cursor: pointer;
+  font-size: 1.5em;
+  text-shadow: 0px 0px 5px #000;
+  text-transform: uppercase;
+}
+
+.back-to-lobby-btn:hover {
+  background: #A81000;
 }
 
 .room-name-header{
