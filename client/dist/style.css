@@ -33,9 +33,9 @@ input, button {
 #overlay {
   position: fixed;
   display: block;
-  height: 40%;
-  width: 65%;
-  max-width: 275px;
+  height: 50%;
+  width: 75%;
+  max-width: 400px;
   top: 0; 
   left: 0;
   right: 0;
