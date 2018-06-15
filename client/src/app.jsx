@@ -37,7 +37,7 @@ class App extends React.Component {
           var user = JSON.parse(response.headers.user);
           this.setState({
             // username: user.displayName
-            username: prompt('whats ur username??'),
+            username: user.displayName,
           })
         } else {
           var user = undefined;
