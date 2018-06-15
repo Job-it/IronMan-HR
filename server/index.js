@@ -1,6 +1,5 @@
 var express = require('express');
 var session = require('express-session');
-var https = require('https');
 var bodyParser = require('body-parser');
 var {retrieveUsers, addUserOrUpdateScore, get1000Words} = require('../database/index.js');
 var passport = require('./fbAuth');
@@ -71,12 +70,12 @@ app.get('/dictionary', (req, res) => {
 
 var port = process.env.PORT || 5000;
 
-var certOptions = {
-  key: fs.readFileSync(path.resolve('server.key')),
-  cert: fs.readFileSync(path.resolve('server.crt'))
-}
+// var certOptions = {
+//   key: fs.readFileSync(path.resolve('server.key')),
+//   cert: fs.readFileSync(path.resolve('server.crt'))
+// }
 
-var server = https.createServer(certOptions, app).listen(port, function() {
+var server = app.listen(port, function() {
   console.log(`listening on port ${port}!`);
 });
 
