@@ -17,6 +17,7 @@ class Lobby extends React.Component {
 
   componentDidMount() {
     this.props.socket.emit('entering lobby', {room: 'GUDETAMA lobby'});
+    this.getGameRoomsAndSetState();
   }
 
 
@@ -55,11 +56,16 @@ class Lobby extends React.Component {
         {/* {this.state.userNameSubmitted ? <div></div> : <form id="starter-form" onSubmit={(e) => this.handleUserNameSubmit(e)} autoComplete="off">
           <input id="user-input" placeholder="Who are you?" onChange={this.props.handleUserNameChange} autoFocus/>
         </form>} */}
-        <button onClick = {this.props.handleLogout}>Logout</button>
-        <button onClick = {this.getGameRoomsAndSetState}>Update Room List</button>
-        <button onClick = {() => {this.addRoomAndGetNewRooms()}} >Add Room</button>
+        <div className='lobby-user-info'>
+          <button onClick = {this.props.handleLogout}>Logout</button>
+          <p>{this.props.username}</p>
+        </div>
         <div id='lobby-room-list'>
-        <h2>Game Rooms:</h2>
+        <h2 id='game-room-header'>Game Rooms:</h2>
+        <div className = 'lobby-room-btns'>
+          <button onClick = {this.getGameRoomsAndSetState}>Update Room List</button>
+          <button onClick = {() => {this.addRoomAndGetNewRooms()}} >Add Room</button>
+        </div>
           <ul>
           <Trail from={{ opacity: 0 }} to={{ opacity: 1 }} keys = {Object.keys(this.state.rooms).map(room => room)}>
             { Object.keys(this.state.rooms).map((room) => styles => {

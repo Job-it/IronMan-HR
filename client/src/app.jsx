@@ -51,7 +51,9 @@ class App extends React.Component {
 
   addRoom() {
     var playerRoom = prompt('Create or join a room:');
-    axios.post('/rooms', {newRoom: playerRoom});
+    if (playerRoom !== null) {
+      axios.post('/rooms', {newRoom: playerRoom});
+    }
   }
 
   handleUserNameChange(e) {
@@ -116,11 +118,12 @@ class App extends React.Component {
             handleRoomNameClick={this.handleRoomNameClick}
             socket={socket}
             addRoom={this.addRoom}/>
-            <div className='sidebar-wrapper'>
+            <div className = 'lobby-right'>
+            <div className='lobby-sidebar-wrapper'>
                   <Scoreboard {...props} />
+                  <h2 id='chat-lobby-title'>Chat</h2>
                   <div className='in-game-chat-wrapper'>{this.state.username ? <Chat {...props} room = {this.state.room} username = {this.state.username} socket={socket} /> : null }</div>
             </div>
-            <div>
               <button className="sound-btn" onClick={() => this.toggleSound()}>{ this.state.soundOn ? <img src="../assets/speakerOn.png" /> : <img src="../assets/mute.png" /> }</button>
             </div>
           </div>
