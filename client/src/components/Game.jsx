@@ -1,6 +1,7 @@
 import React from 'react';
 import Brick from './Brick.jsx';
 import axios from 'axios';
+import Speed from './Speed.jsx';
 
 class Game extends React.Component {
   constructor(props) {
@@ -9,6 +10,7 @@ class Game extends React.Component {
       userInput: '',
       dictionary: {},
       words: [],
+      correctWords: 0,
       theirWords: [],
       time: 0,
       timeInterval: 1000,
@@ -22,6 +24,9 @@ class Game extends React.Component {
       opponentScore: 0,
       opponentName: null,
       opponentLost: false,
+      startTime: 0,
+      stopTime: 0,
+      wpm: 0,
     };
     
     this.goToLobby = this.goToLobby.bind(this);
@@ -193,6 +198,10 @@ class Game extends React.Component {
       time: 0,
       timeInterval: 1000,
       userInput: '',
+      startTime: Date.now(),
+      stopTime: 0,
+      correctWords: 0,
+      wpm: 0,
     }, () => go());
   
   }
@@ -217,7 +226,7 @@ class Game extends React.Component {
   handleChange(e) {
     this.setState({
       userInput: e.target.value,
-    })
+    });
   }
 
   // when the user hits "enter"
@@ -237,6 +246,7 @@ class Game extends React.Component {
       }
       this.setState({
         words: newWords,
+        correctWords: this.state.correctWords + 1,
       });
     } else {
       // else flash red for a mistyped word
@@ -271,8 +281,12 @@ class Game extends React.Component {
 
   goToLobby() {
     this.setState({
-      gameover: false
-    })
+      gameover: false,
+      startTime: 0,
+      stopTime: 0,
+      correctWords: 0,
+      wpm: 0,
+    });
     this.props.history.push('/lobby');
     this.props.setRoomToLobby();
   }
@@ -287,9 +301,14 @@ class Game extends React.Component {
   }
 
   stopGame() {
-
     this.setState({
-      gameover: true
+      stopTime: Date.now(),
+      gameover: true,
+    }, () => {
+      var minutes = ((this.state.stopTime - this.state.startTime) / 1000) / 60;
+      this.setState({
+        wpm: Math.round(this.state.correctWords / minutes),
+      });
     });
 
     if(this.state.opponentLost === true) {
@@ -309,7 +328,7 @@ class Game extends React.Component {
       }
     }, 2000);
     
-    this.sendScore(this.props.username, this.state.time);
+    this.sendScore(this.props.username, this.state.time, this.state.wpm);
  
     // audio effect
     if (this.props.soundOn) {
@@ -320,6 +339,7 @@ class Game extends React.Component {
   render() {
     return (
       <div className="game">
+        <Speed room={this.state.room} username={this.state.username} gameover={this.state.gameover} wpm={this.state.wpm}/>
         <div id="overlay">
           <div>{this.state.instructions.map((line, index) => {
             // audio effect:
