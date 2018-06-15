@@ -224,7 +224,7 @@ class Game extends React.Component {
     this.setState({
       words: [],
       time: 0,
-      timeInterval: 3000,
+      timeInterval: 1000,
       userInput: '',
       opponentDataLastReceived: Date.now(),
     }, () => go());
@@ -313,19 +313,25 @@ class Game extends React.Component {
 
   showGameoverOverlay() {
 
+    if (this.state.opponentAbandonedGame === true) {
+      var overlayMessage = 'YOU WIN: OPPONENT FORFEIT!'
+    } else {
+      var overlayMessage = `GAME OVER ${this.state.time > this.state.opponentScore ? 'YOU WIN' : 'YOU LOSE'}`
+    }
+
+    this.setState({
+      instructions: [],
+      prompt: '',
+      message: overlayMessage,
+    });
+
     setTimeout(() => {
       this.setState({
         instructions: [`GAME OVER ${this.state.time > this.state.opponentScore ? 'YOU WIN' : 'YOU LOSE'}`, `YOU SCORED: ${this.state.time}`, `${this.state.opponentName} SCORED: ${this.state.opponentScore}`],
         prompt: 'Back to lobby',
         message: false
       });
-    }, 2000);
-
-    this.setState({
-      instructions: [],
-      prompt: '',
-      message: `GAME OVER ${this.state.time > this.state.opponentScore ? 'YOU WIN' : 'YOU LOSE'}`
-    });
+    }, 4000);
 
     document.getElementById('overlay').style.display = "block";
   }
