@@ -12,6 +12,10 @@ class Lobby extends React.Component {
       roomNameInput: ''
     }
 
+    this.props.socket.on('room was submitted', () => {
+      this.getGameRoomsAndSetState();
+    });
+
     this.getGameRoomsAndSetState = this.getGameRoomsAndSetState.bind(this);
   }
 
