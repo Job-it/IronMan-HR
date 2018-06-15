@@ -241,6 +241,8 @@ input {
 
 .sidebar-wrapper{
   width: 40%;
+  border-left: 5px dashed black;
+  padding-left: 15px;
 
 }
 
