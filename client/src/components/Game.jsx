@@ -23,7 +23,6 @@ class Game extends React.Component {
       opponentScore: 0,
       opponentName: null,
       opponentLost: false,
-      soundOn: false,
     };
     
     this.goToLobby = this.goToLobby.bind(this);
@@ -35,7 +34,6 @@ class Game extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.sendScore = this.sendScore.bind(this);
     this.stopGame = this.stopGame.bind(this);
-    this.toggleSound = this.toggleSound.bind(this);
 
 
     this.props.socket.on('receive words from opponent', (data) => {
@@ -235,7 +233,7 @@ class Game extends React.Component {
       document.getElementById('typing-input').style.backgroundColor = "green";
       var newWords = this.state.words.slice();
       newWords.splice(index, 1);
-      if (this.state.soundOn) {
+      if (this.props.soundOn) {
         playCorrect();
       }
       this.setState({
@@ -243,7 +241,7 @@ class Game extends React.Component {
       });
     } else {
       // else flash red for a mistyped word
-      if (this.state.soundOn) {
+      if (this.props.soundOn) {
         playWrong();
       }
       document.getElementById('typing-input').style.backgroundColor = "red";
@@ -315,26 +313,19 @@ class Game extends React.Component {
     this.sendScore(this.props.username, this.state.time);
  
     // audio effect
-    if (this.state.soundOn) {
+    if (this.props.soundOn) {
       playGameOver();
     }
-  }
-
-  toggleSound() {
-    this.setState({
-      soundOn: !this.state.soundOn
-    });
   }
 
   render() {
     return (
       <div className="game">
         <div><button className='back-to-lobby-btn' onClick={()=> this.goToLobby()}>Back to Lobby</button></div>
-        <button onClick={() => this.toggleSound()}>{ this.state.soundOn ? 'Turn Sound Off' : 'Turn Sound On' }</button>
         <div id="overlay">
           <div>{this.state.instructions.map((line, index) => {
             // audio effect:
-            if (this.state.soundOn) {
+            if (this.props.soundOn) {
               playStart();
             } else {
               stopStart();
