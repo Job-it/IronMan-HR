@@ -39,6 +39,7 @@ class Game extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.sendScore = this.sendScore.bind(this);
     this.stopGame = this.stopGame.bind(this);
+    this.calculateWpm = this.calculateWpm.bind(this);
 
 
     this.props.socket.on('receive words from opponent', (data) => {
@@ -278,22 +279,38 @@ class Game extends React.Component {
     }, 100);
 
     this.setState({
-      userInput: '',
+      userInput: ''
+    });
+
+    this.calculateWpm();
+  }
+
+  calculateWpm() {
+    this.setState({
+      stopTime: Date.now()
+    }, () => {
+      if (this.state.startTime !== 0) {
+        var minutes = ((this.state.stopTime - this.state.startTime) / 1000) / 60;
+        this.setState({
+          wpm: Math.round(this.state.correctWords / minutes)
+        });
+      }
     });
   }
 
   // upon game over, sends username and score to database to be added/updated
-  sendScore(username, score) {
+  sendScore(username, score, wpm) {
     console.log('sending score');
     axios.post('/wordgame', {
       "username": username,
-      "high_score": score
+      "high_score": score,
+      "high_wpm": wpm
     })
     .then(result => {
       console.log(result);
     }).catch(err => {
       console.error(err);
-    })
+    });
   }
 
   goToLobby() {
@@ -319,14 +336,10 @@ class Game extends React.Component {
 
   stopGame() {
     this.setState({
-      stopTime: Date.now(),
       gameover: true,
-    }, () => {
-      var minutes = ((this.state.stopTime - this.state.startTime) / 1000) / 60;
-      this.setState({
-        wpm: Math.round(this.state.correctWords / minutes),
-      });
     });
+
+    this.calculateWpm();
 
     if(this.state.opponentLost === true) {
       this.showGameoverOverlay();
@@ -344,7 +357,7 @@ class Game extends React.Component {
     }, 2000);
     
     this.sendScore(this.props.username, this.state.time, this.state.wpm);
- 
+
     // audio effect
     if (this.props.soundOn) {
       playGameOver();
@@ -354,7 +367,7 @@ class Game extends React.Component {
   render() {
     return (
       <div className="game">
-        <Speed room={this.state.room} username={this.state.username} gameover={this.state.gameover} wpm={this.state.wpm}/>
+        <Speed wpm={this.state.wpm}/>
         <div id="overlay">
           <div>{this.state.instructions.map((line, index) => {
             // audio effect:

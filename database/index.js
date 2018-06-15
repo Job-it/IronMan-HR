@@ -104,16 +104,16 @@ const retrieveUsers = function(callback) {
 // };
 
 //check if a user has played before, and add or update accordingly
-const addUserOrUpdateScore = function(userWithScore, callback) {
+const addUserOrUpdateScore = function(userWithScores, callback) {
   let queryStr = 'SELECT * FROM users WHERE username = ?';
-  connection.query(queryStr, [userWithScore.username], (err, result) => {
+  connection.query(queryStr, [userWithScores.username], (err, result) => {
     if (err) {
       console.error('error retrieving user from database', err);
     } else {
       if (result.length === 0) {
         // if new user, add them to the database
-        let queryStr2 = 'INSERT INTO users (username, high_score) VALUES (?, ?)';
-        connection.query(queryStr2, [userWithScore.username, userWithScore.high_score], (err) => {
+        let queryStr2 = 'INSERT INTO users (username, high_score, high_wpm) VALUES (?, ?, ?)';
+        connection.query(queryStr2, [userWithScores.username, userWithScores.high_score, userWithScores.high_wpm], (err) => {
           if (err) {
             console.error('error inserting high score into DB', err);
           } else {
@@ -122,20 +122,31 @@ const addUserOrUpdateScore = function(userWithScore, callback) {
         });
       } else {
         // else only update if user beat their personal best score
-        let queryStr3 = 'UPDATE users SET high_score = ? WHERE username = ? AND high_score < ?';
-        connection.query(queryStr3, [userWithScore.high_score, userWithScore.username, userWithScore.high_score], (err, result) => {
+          // find the max of high_score and high_wpm first, then "update" both
+        let initialQuery = 'SELECT * FROM users WHERE username = ?';
+        connection.query(initialQuery, [userWithScores.username], (err, result) => {
           if (err) {
-            console.error('error updating high score', err);
-          } else if (result.changedRows === 0) {
-            callback('checked, but didnt beat personal best');
+            console.error('error retrieving the user from the database', err);
           } else {
-            callback('updated high score');
+            let newScores = Object.assign({}, result[0]);
+            newScores.high_score = Math.max(userWithScores.high_score, newScores.high_score);
+            newScores.high_wpm = Math.max(userWithScores.high_wpm, newScores.high_wpm);
+            let queryStr3 = 'UPDATE users SET high_score = ?, high_wpm = ? WHERE username = ?';
+            connection.query(queryStr3, [newScores.high_score, newScores.high_wpm, newScores.username], (err, result) => {
+              if (err) {
+                console.error('error updating scores', err);
+              } else if (result.changedRows === 0) {
+                callback('checked, but didnt beat any personal bests');
+              } else {
+                callback('updated a personal best!');
+              }
+            });
           }
         });
       }
     }
-  })  
-}
+  });
+};
 
 const saveMessage = ({message, username, room}) => {
   return new Promise((resolve, reject) => {
