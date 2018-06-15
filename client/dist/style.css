@@ -130,7 +130,7 @@ nav {
 }
 
 input {
-  width: 100%;
+  width: 101%;
   height: 30px;
   text-align: center;
   border-radius: 10px;
@@ -202,7 +202,7 @@ input {
   width: 20%;
   height: 100%;
   background-color: #ffffff;
-  border: solid 3px #e0e0e0;
+  border: solid 3px #000000;
   border-radius: 6px;
 }
 
@@ -269,6 +269,7 @@ input {
 
 #lobby-room-list {
   min-height: 80%;
+  overflow: scroll;
 }
 
 #lobby-room-list h2 {
@@ -355,10 +356,14 @@ input {
 .send-message {
   height: 4vh;
   margin: 0 auto;
+  margin-bottom: 20px;
 }
 
 .message-input {
-  margin-top: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: solid #000000;
+  border-radius: 4px;
 }
 
 .message-list {
@@ -408,8 +413,9 @@ input {
 
 .emoji-mart {
   background-color: #FFFFFF;
-  border: solid 3px #e0e0e0;
+  border: solid 3px #000000;
   margin-top: 5px;
+  padding: 10px;
   height: 100px;
   overflow: scroll;
 }
@@ -418,10 +424,16 @@ input {
   padding: 8px 0 8px 0;
 }
 
-.emoji-mart.search {
-  font-size: 5px;
+.emoji-mart-search {
+  font-size: 8px;
+}
+
+.emoji-mart-category-label {
+  font-size: 10px;
+  margin-top: 3px;
+  margin-bottom: 7px;
 }
 
 .emoji-opener {
-  margin-top: 8px;
+  margin-top: 10px;
 }

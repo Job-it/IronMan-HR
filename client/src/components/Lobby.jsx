@@ -17,6 +17,7 @@ class Lobby extends React.Component {
 
   componentDidMount() {
     this.props.socket.emit('entering lobby', {room: 'GUDETAMA lobby'});
+    this.getGameRoomsAndSetState();
   }
 
 
