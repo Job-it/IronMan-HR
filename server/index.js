@@ -157,9 +157,9 @@ socket.on('leaving room', (data) => {
   socket.leave(data.room);
   console.log(data.username, 'left', data.room);
   if (data.username !== undefined) { 
-    rooms[data.room].playersNotReady = rooms[data.room].spectators.filter((user) => user !== data.username);
+    rooms[data.room].spectators = rooms[data.room].spectators.filter((user) => user !== data.username);
     rooms[data.room].playersNotReady = rooms[data.room].playersNotReady.filter((user) => user !== data.username);
-    rooms[data.room].playersNotReady = rooms[data.room].playersReady.filter((user) => user !== data.username);
+    rooms[data.room].playersReady = rooms[data.room].playersReady.filter((user) => user !== data.username);
   }
   // console.log('LEAVING A ROOM, THESE ARE THE ROOMS', io.sockets.adapter.rooms);
 });
