@@ -98,13 +98,14 @@ app.use('/messages', messageRouter);
 var rooms = {};
 
 // When a user adds a new room, store that room in the ROOMS STORAGE OBJECT
-app.post('/rooms', (req, res) => {
+app.post('/gamerooms', (req, res) => {
   var allRooms = Object.keys(rooms);
   if (!allRooms.includes(req.body.newRoom)) {
     rooms['GUDETAMA ' + req.body.newRoom] = { 
       spectators: [], 
       playersNotReady: [], 
-      playersReady: []
+      playersReady: [],
+      owner: req.user.displayName,
     };
   };
   io.emit('room was submitted');
