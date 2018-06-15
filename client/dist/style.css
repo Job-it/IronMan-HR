@@ -35,7 +35,7 @@ input, button {
   display: block;
   height: 40%;
   width: 65%;
-  max-width: 275px;
+  max-width: 375px;
   top: 0; 
   left: 0;
   right: 0;
@@ -64,7 +64,8 @@ input, button {
 }
 
 #overlay-start {
-  font-size: 32px;
+  line-height: 1.25;
+  font-size: 28px;
   margin: 20px;
   text-align: center;
   cursor: pointer;
@@ -241,7 +242,7 @@ input {
 }
 
 .in-game-chat-wrapper{
-  height: 55%;
+  height: 60%;
 }
 
 .lobby-right {
