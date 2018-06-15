@@ -28,7 +28,7 @@ class Scoreboard extends React.Component {
   render() {
   	return (
       <div className="scoreboard">
-        <h2 className="sbHeader">HIGH SCORES</h2>
+        <h3 className="sbHeader">HIGH SCORES</h3>
         <ul className="sbColumn left">RANK</ul>
         <ul className="sbColumn middle">NAME</ul>
         <ul className="sbColumn right">SCORE</ul>

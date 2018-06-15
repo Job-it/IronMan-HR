@@ -74,6 +74,7 @@ class Chat extends React.Component {
   render() {
     return (
       <div className = "chat-box">
+        <h4 id='chat-lobby-title'>{this.props.room}: CHAT</h4>
         <div className ='messages' id='messages'>
           <ul className = 'message-list'>
             {this.state.messages.map((messageObj) => {
