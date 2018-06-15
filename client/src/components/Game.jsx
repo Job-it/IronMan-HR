@@ -214,7 +214,7 @@ class Game extends React.Component {
     this.setState({
       words: [],
       time: 0,
-      timeInterval: 1000,
+      timeInterval: 3000,
       userInput: '',
       startTime: Date.now(),
       stopTime: 0,
@@ -327,10 +327,20 @@ class Game extends React.Component {
 
   showGameoverOverlay() {
 
+    setTimeout(() => {
+      this.setState({
+        instructions: [`GAME OVER ${this.state.time > this.state.opponentScore ? 'YOU WIN' : 'YOU LOSE'}`, `YOU SCORED: ${this.state.time}`, `${this.state.opponentName} SCORED: ${this.state.opponentScore}`],
+        prompt: 'Back to lobby',
+        message: false
+      });
+    }, 2000);
+
     this.setState({
-      instructions: [`GAME OVER ${this.state.time > this.state.opponentScore ? 'YOU WIN' : 'YOU LOSE'}`, `YOU SCORED: ${this.state.time}`, `${this.state.opponentName} SCORED: ${this.state.opponentScore}`],
-      prompt: 'Back to lobby',
+      instructions: [],
+      prompt: '',
+      message: `GAME OVER ${this.state.time > this.state.opponentScore ? 'YOU WIN' : 'YOU LOSE'}`
     });
+
     document.getElementById('overlay').style.display = "block";
   }
 
@@ -386,7 +396,7 @@ class Game extends React.Component {
               <button type = "submit"> Select Username </button>
             </form>
           </div> */}
-          <div id="overlay-start" onClick={this.state.gameover ? this.goToLobby : this.getReady } className="blinking">{this.state.prompt}</div>
+          <div id="overlay-start" onClick={this.state.gameover ? this.goToLobby : this.getReady } className="blinking">{this.state.message ? this.state.message : ''}{this.state.prompt}</div>
         </div>
 
         <div className="board">
