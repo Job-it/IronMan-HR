@@ -18,6 +18,14 @@ html, body, #app, .app-container {
   background: url("./assets/treebackground.png") center/cover;
 }
 
+input, button {
+  font-family: "Press Start 2P", cursive;
+}
+
+.app-container > div {
+  height: 100%;
+}
+
 #app {
   padding: 10px;
 }
@@ -25,8 +33,9 @@ html, body, #app, .app-container {
 #overlay {
   position: fixed;
   display: block;
-  height: 75%;
+  height: 40%;
   width: 65%;
+  max-width: 375px;
   top: 0; 
   left: 0;
   right: 0;
@@ -55,7 +64,8 @@ html, body, #app, .app-container {
 }
 
 #overlay-start {
-  font-size: 32px;
+  line-height: 1.25;
+  font-size: 28px;
   margin: 20px;
   text-align: center;
   cursor: pointer;
@@ -88,9 +98,12 @@ nav {
   width: 70%;
 }
 
-.scoreboard {
-  width: 30%;
+.sound-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
+
 
 .timer {
   text-align: center;
@@ -125,8 +138,8 @@ nav {
 }
 
 input {
-  width: 100%;
-  height: 100%;
+  width: 101%;
+  height: 30px;
   text-align: center;
   border-radius: 10px;
   font-size: 1.5em;
@@ -153,14 +166,16 @@ input {
 }
 
 #crackedegg {
-  width: 45%;
-  height: 45%;
+  height: 30%;
   background: url("./assets/gudetama-cracked.gif") no-repeat center/cover;
+  display: block;
+  margin: 0 auto;
 }
 
 .sbColumn {
   float: left;
   padding: 10px;
+  padding-left: 40px;
   height: 0px;
   text-align: center
 }
@@ -177,6 +192,284 @@ input {
   width: 33%;
 }
 
-.sbHeader{
-  margin-left: 70px
+.sbHeader {
+  padding-top: 10px;
+  text-align: center;
+}
+
+.room-details {
+  margin-top: 15px;
+}
+
+.tiny-details {
+  color: deepskyblue;
+}
+
+.tiny-details-number{
+  color: gold;
+}
+
+
+.chat-box {
+  padding: 0 0 15px 0;
+  min-width: 100px;
+  margin: 20px 0 20px 0;
+  width: 20%;
+  height: 100%;
+  border-style: outset;
+  border-width: 10px;
+}
+
+.chat-username, .chat-message{
+  font-size: 10px;
+}
+
+.messages {
+  overflow: scroll;
+  height: 70%;
+  margin-bottom: 15px;
+}
+
+.scoreboard{
+  font-size: 14px;
+  overflow: auto;
+  height: 35%;
+  color: goldenrod;
+  border-style: outset;
+  border-width: 10px;
+  background-color: rgba(0,0,0,.5);
+  text-align: center;
+}
+
+.in-game-chat-wrapper{
+  height: 60%;
+}
+
+.lobby-right {
+  width: 40%;
+}
+
+.sidebar-wrapper{
+  width: 40%;
+  border-left: 5px dashed black;
+  padding-left: 15px;
+
+}
+
+.lobby-sidebar-wrapper{
+  width: 80%;
+  height: 100%;
+  display: block;
+  margin: 0 auto;
+
+}
+
+#chat-lobby-title {
+  text-align: left;
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-bottom: 5px;
+  font-style: underline;
+  color: goldenrod;
+}
+
+
+.in-game-chat-wrapper .chat-box{
+  width: 100%;
+  background-color: rgba(0,0,0,.5);
+}
+
+.lobby-display {
+  display: flex;
+  justify-content: space-between;
+}
+
+.room-list {
+  margin: 20 auto;
+  padding: 0 20px 0 20px;
+}
+
+#lobby-room-list-wrapper {
+  width: 60%;
+  border-right: 3px dotted #cecdcd;
+  padding-right: 15px;
+}
+
+#lobby-room-list {
+  min-height: 80%;
+  margin: 0 auto;
+}
+
+#lobby-room-list h2 {
+  padding: 30px 0 15px 30px;
+  text-align: center;
+}
+
+#lobby-room-list ul li {
+  text-align: center;
+  background: url("./assets/bricklayer.PNG") no-repeat center/cover;
+  color: white;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+#lobby-room-list ul li:hover {
+  cursor: pointer;
+  color: yellow;
+  position: relative; 
+  top: -5px;
+}
+
+.back-to-lobby-btn {
+  background: #7C7C7C;
+  border-bottom: 5px inset rgba(0,0,0,.5);
+  border-left: 5px inset rgba(0,0,0,.5);
+  border-right: 5px inset rgba(255,255,255,.5);
+  border-top: 5px inset rgba(255,255,255,.5);
+  box-sizing: border-box;
+  color: white;
+  background: #881400;
+  cursor: pointer;
+  text-shadow: 0px 0px 5px #000;
+  text-transform: uppercase;
+  display: block;
+  margin: 0 auto;
+}
+
+.lobby-room-btns{
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.lobby-room-btns button:hover{
+  background-color: goldenrod;
+  cursor: pointer;
+}
+
+.lobby-user-info {
+  padding-left: 10px;
+  width: 100%;
+}
+
+.lobby-user-info button {
+  float: left;
+}
+
+.lobby-user-info button:hover {
+  float: left;
+  cursor: pointer;
+  background-color: red;
+}
+
+.lobby-user-info p {
+  float: right;
+  border-radius: 5px;
+}
+
+#game-room-header {
+  clear: both;
+}
+
+.back-to-lobby-btn:hover {
+  background: #A81000;
+}
+
+.room-name-header{
+  font-size: 1.5em;
+}
+
+.send-message {
+  display: flex;
+  justify-content: center;
+  padding: 0 10px 0 10px;
+  height: 4vh;
+  margin: 0 auto;
+  margin-bottom: 10px;
+}
+
+.send-wrapper {
+  width: 100%;
+}
+
+.message-input {
+  padding: 10px 0px 10px 0px;
+}
+
+.message-list {
+  margin: 0 auto;
+  height: 80%;
+  width: 90%;
+  padding: 0;
+  color: rgb(235, 235, 235)
+}
+
+.facebook-login {
+  display: flex;
+  justify-content: center;
+  padding-top: 40vh;
+  text-align: center;
+  align-items: center;
+}
+
+.login-box {
+  display: flex;
+  align-items: center;
+  border: solid 2px #ffffff;
+  border-radius: 4px;
+  background-color: #4267b2;
+  padding: 12px 25px 12px 25px;
+}
+
+.login-text {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.login-text:hover {
+  text-decoration: underline;
+}
+
+.facebook-login-logo {
+  height: 26px;
+  width: 26px;
+  margin-right: 20px;
+  border: solid 1px #ffffff;
+  border-radius: 2px;
+}
+
+.emoji-mart-bar {
+  display: none;
+}
+
+.emoji-mart {
+  background-color: rgb(235, 235, 235);
+  border: solid 3px #000000;
+  margin-top: 5px;
+  padding: 10px;
+  height: 100px;
+  overflow: scroll;
+}
+
+.emoji-mart-category {
+  padding: 8px 0 8px 0;
+}
+
+.emoji-mart-search {
+  font-size: 8px;
+}
+
+.emoji-mart-category-label {
+  font-size: 10px;
+  margin-top: 3px;
+  margin-bottom: 7px;
+}
+
+.emoji-opener {
+  color: rgb(235, 235, 235);
+  margin-left: 10px;
+  font-size: 12px;
 }
