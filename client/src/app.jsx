@@ -21,11 +21,13 @@ class App extends React.Component {
     this.state = {
       room: 'GUDETAMA lobby',
       username: false,
+      soundOn: false,
     };
     this.handleUserNameChange = this.handleUserNameChange.bind(this);
     this.handleRoomNameClick = this.handleRoomNameClick.bind(this);
     this.addRoom = this.addRoom.bind(this);
     this.setRoomToLobby = this.setRoomToLobby.bind(this);
+    this.toggleSound = this.toggleSound.bind(this);
   }
 
   componentDidMount() {
@@ -87,6 +89,18 @@ class App extends React.Component {
     })
   }
 
+  toggleSound() {
+    this.setState({
+      soundOn: !this.state.soundOn
+    }, () => {
+      if (!this.state.soundOn) {
+        stopStart();
+      } else {
+        playStart();
+      }
+    });
+  }
+
   render() {
     return (
       <div className="app-container">
@@ -96,6 +110,8 @@ class App extends React.Component {
             handleLogout = {() => {
               this.logout()
             }}
+            toggleSound={this.toggleSound}
+            soundOn={this.state.soundOn}
             room={this.state.room}
             username={this.state.username}
             handleUserNameChange={this.handleUserNameChange}
@@ -108,6 +124,7 @@ class App extends React.Component {
                   <h2 id='chat-lobby-title'>Chat</h2>
                   <div className='in-game-chat-wrapper'>{this.state.username ? <Chat {...props} room = {this.state.room} username = {this.state.username} socket={socket} /> : null }</div>
             </div>
+              <button className="sound-btn" onClick={() => this.toggleSound()}>{ this.state.soundOn ? <img src="../assets/speakerOn.png" /> : <img src="../assets/mute.png" /> }</button>
             </div>
           </div>
         }/>
@@ -118,11 +135,12 @@ class App extends React.Component {
                 <h1>SAVE GUDETAMA!</h1>
               </nav>  
               <div className="game-container">
-                <Game {...props} socket={socket} room={this.state.room} setRoomToLobby={this.setRoomToLobby} username={this.state.username} handleUserNameChange={this.handleUserNameChange} history = {this.props.history}/>
+                <Game {...props} toggleSound={this.toggleSound} soundOn={this.state.soundOn} socket={socket} room={this.state.room} setRoomToLobby={this.setRoomToLobby} username={this.state.username} handleUserNameChange={this.handleUserNameChange} history = {this.props.history}/>
                 <div className='sidebar-wrapper'>
                   <Scoreboard {...props} />
                   <div className='in-game-chat-wrapper'><Chat {...props} room = {this.state.room} username = {this.state.username} socket={socket} /></div>
                 </div>
+                <button className="sound-btn" onClick={() => this.toggleSound()}>{ this.state.soundOn ? <img src="../assets/speakerOn.png" /> : <img src="../assets/mute.png" /> }</button>
               </div>
             </div>);
           }
@@ -139,6 +157,7 @@ class App extends React.Component {
                   <Scoreboard {...props} />
                   <div className='in-game-chat-wrapper'><Chat {...props} room = {this.state.room} username = {this.state.username} socket={socket} /></div>
                 </div>
+                <button className="sound-btn" onClick={() => this.toggleSound()}>{ this.state.soundOn ? <img src="../assets/speakerOn.png" /> : <img src="../assets/mute.png" /> }</button>
               </div>
             </div>);
           }
