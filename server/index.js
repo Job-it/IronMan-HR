@@ -56,7 +56,6 @@ app.get('/wordgame', (req, res) => {
 
 // at end of game, add to or update db with username and high score
 app.post('/wordgame', (req,res) => {
-  console.log(req.body);
   addUserOrUpdateScore(req.body, (results) => {
     res.status(201).send(results);
   });
@@ -107,6 +106,7 @@ app.post('/rooms', (req, res) => {
       playersReady: []
     };
   };
+  io.emit('room was submitted');
   res.status(200).send();
 })
 
