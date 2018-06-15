@@ -1,7 +1,6 @@
 import React from 'react';
 import Brick from './Brick.jsx';
 import axios from 'axios';
-import {Spring} from 'react-spring';
 
 class Game extends React.Component {
   constructor(props) {
