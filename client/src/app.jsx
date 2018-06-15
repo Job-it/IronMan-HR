@@ -4,8 +4,8 @@ import Game from './components/Game.jsx';
 import Lobby from './components/Lobby.jsx';
 import Scoreboard from './components/Scoreboard.jsx';
 import Login from './components/Login.jsx';
-import Chat from './components/Chat.jsx'
-import axios from 'axios'
+import Chat from './components/Chat.jsx';
+import axios from 'axios';
 import Spectator from './components/Spectator.jsx';
 
 
