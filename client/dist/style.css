@@ -269,7 +269,6 @@ input {
 
 #lobby-room-list {
   min-height: 80%;
-  overflow: scroll;
 }
 
 #lobby-room-list h2 {
