@@ -27,6 +27,7 @@ class Game extends React.Component {
       startTime: 0,
       stopTime: 0,
       wpm: 0,
+      iLost: false
     };
     
     this.goToLobby = this.goToLobby.bind(this);
@@ -61,9 +62,14 @@ class Game extends React.Component {
       }
     });
     this.props.socket.on('they lost', (data) => {
- 
-      // document.getElementById('our-game').style.backgroundColor = "green";
-      document.getElementById('their-game').style.backgroundColor = "red";
+
+      if (this.state.iLost) {
+        document.getElementById('their-game').style.backgroundColor = "green";
+      } else {
+        document.getElementById('their-game').style.backgroundColor = "red";
+        document.getElementById('their-gudetama').style.display = "none";
+      }
+      
       console.log(data);
       this.setState({
         opponentLost: true,
@@ -156,17 +162,28 @@ class Game extends React.Component {
       // (as bricks build up, background turns a darker red to signify danger)
       if (this.state.words.length >= 20) {
         clearTimeout(step);
+        this.setState({
+          iLost: true
+        });
         //console.log('opponent time',this.state.time)
         this.props.socket.emit('i lost', {
           room: this.props.room, 
           username: this.props.username, 
           score: this.state.time
         });
+        if (!this.state.opponentLost) {
+          document.getElementById('our-game').style.backgroundColor = "red";
+          document.getElementById('gudetama').style.display = "none";
+        }
         this.stopGame();
       } else if (this.state.words.length > 15) {
-        document.getElementById('gudetama').style.backgroundColor = "rgba(255, 0, 0, 1)";
+        if (!this.state.opponentLost && !this.state.iLost) {
+          document.getElementById('gudetama').style.backgroundColor = "rgba(255, 0, 0, 1)";
+        }
       } else if (this.state.words.length > 10) {
-        document.getElementById('gudetama').style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+        if (!this.state.opponentLost && !this.state.iLost) {
+          document.getElementById('gudetama').style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+        }
       }
 
       // updates the time and speeds up the game accordingly 
@@ -294,7 +311,7 @@ class Game extends React.Component {
   showGameoverOverlay() {
 
     this.setState({
-      instructions: ['GAME OVER', `YOU SCORED: ${this.state.time}`, `YOUR OPPONENT SCORED: ${this.state.opponentScore}`],
+      instructions: [`GAME OVER ${this.state.time > this.state.opponentScore ? 'YOU WIN' : 'YOU LOSE'}`, `YOU SCORED: ${this.state.time}`, `${this.state.opponentName} SCORED: ${this.state.opponentScore}`],
       prompt: 'Back to lobby',
     });
     document.getElementById('overlay').style.display = "block";
@@ -316,8 +333,6 @@ class Game extends React.Component {
     }
 
     document.getElementById('typing-input').disabled = true;
-    document.getElementById('gudetama').style.display = "none";
-    document.getElementById('their-gudetama').style.display = "none";
     // document.getElementById('starter-form').disabled = false;
     // document.getElementById('user-input').disabled = false;
 
@@ -363,7 +378,7 @@ class Game extends React.Component {
 
         <div className="board">
           {/* your game: */}
-          <div className="play"> 
+          <div className="play" id="our-game"> 
             <div className="timer"><h1>{this.state.time}</h1></div>
             {this.state.words.map((word, index) => {
               return <Brick word={word} key={index} />
