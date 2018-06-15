@@ -200,6 +200,14 @@ input {
   margin-top: 15px;
 }
 
+.tiny-details {
+  color: deepskyblue;
+}
+
+.tiny-details-number{
+  color: gold;
+}
+
 
 .chat-box {
   padding: 0 0 15px 0;
@@ -303,12 +311,13 @@ input {
   border: 1px solid black;
   padding: 10px;
   border-radius: 10px;
-  background-color: rgba(0,0,0,.5);
 }
 
 #lobby-room-list ul li:hover {
   cursor: pointer;
   color: yellow;
+  position: relative; 
+  top: -5px;
 }
 
 .back-to-lobby-btn {
