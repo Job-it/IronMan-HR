@@ -36,7 +36,7 @@ class App extends React.Component {
         if (response.headers.user) {
           var user = JSON.parse(response.headers.user);
           this.setState({
-            username: user.displayName
+            username: prompt('what ur name bruh')
           })
         } else {
           var user = undefined;
@@ -124,7 +124,7 @@ class App extends React.Component {
                   <h2 id='chat-lobby-title'>Chat</h2>
                   <div className='in-game-chat-wrapper'>{this.state.username ? <Chat {...props} room = {this.state.room} username = {this.state.username} socket={socket} /> : null }</div>
             </div>
-              <button className="sound-btn" onClick={() => this.toggleSound()}>{ this.state.soundOn ? <img src="../assets/speakerOn.png" /> : <img src="../assets/mute.png" /> }</button>
+              <button className="sound-btn" onClick={() => this.toggleSound()}> { this.state.soundOn ? <div>😜🎵</div> : <div>🔇😭</div> } </button>
             </div>
           </div>
         }/>
