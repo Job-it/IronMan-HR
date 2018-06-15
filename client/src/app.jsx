@@ -100,9 +100,12 @@ class App extends React.Component {
             handleRoomNameClick={this.handleRoomNameClick}
             socket={socket}
             addRoom={this.addRoom}/>
-            <div className='sidebar-wrapper'>
+            <div className = 'lobby-right'>
+            <div className='lobby-sidebar-wrapper'>
                   <Scoreboard {...props} />
+                  <h2 id='chat-lobby-title'>Chat</h2>
                   <div className='in-game-chat-wrapper'>{this.state.username ? <Chat {...props} room = {this.state.room} username = {this.state.username} socket={socket} /> : null }</div>
+            </div>
             </div>
           </div>
         }/>
