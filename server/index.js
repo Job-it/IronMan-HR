@@ -5,9 +5,10 @@ var {retrieveUsers, addUserOrUpdateScore, get1000Words} = require('../database/i
 var passport = require('./fbAuth');
 var fs = require('fs');
 var path = require('path');
+var _ = require('underscore');
 var app = express();
 var authMiddleware = require('./authMiddleWare.js');
-var messageRouter = require('./Routers/messages.js')
+var messageRouter = require('./Routers/messages.js');
 
 // Serve static files to the client
 app.use(express.static(__dirname + '/../client/dist'));
@@ -55,7 +56,6 @@ app.get('/wordgame', (req, res) => {
 
 // at end of game, add to or update db with username and high score
 app.post('/wordgame', (req,res) => {
-  console.log(req.body);
   addUserOrUpdateScore(req.body, (results) => {
     res.status(201).send(results);
   });
@@ -93,19 +93,21 @@ app.use('/messages', messageRouter);
 
 // ROOMS STORAGE OBJECT 
 // EXAMPLE ROOM:
-// {spectators: [], playersNotReady: [], playersReady: []}
+// roomname: {spectators: [], playersNotReady: [], playersReady: []}
 var rooms = {};
 
 // When a user adds a new room, store that room in the ROOMS STORAGE OBJECT
-app.post('/rooms', (req, res) => {
+app.post('/gamerooms', (req, res) => {
   var allRooms = Object.keys(rooms);
   if (!allRooms.includes(req.body.newRoom)) {
     rooms['GUDETAMA ' + req.body.newRoom] = { 
       spectators: [], 
       playersNotReady: [], 
-      playersReady: []
+      playersReady: [],
+      owner: req.user.displayName,
     };
   };
+  io.emit('room was submitted');
   res.status(200).send();
 })
 
@@ -120,22 +122,43 @@ var getReadyPlayerCount = (roomName) => {
 }
 
 // Socket events:
+
+var allClients = [];
+
+var playersAndClients = {};
+
 io.on('connection', (socket) => { 
   console.log('a user connected');
+  allClients.push(socket.client.id);
+  console.log('Clients are:', allClients);
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
+    var i = allClients.indexOf(socket.client.id);
+    allClients.splice(i, 1);
+    var playerUserName = (_.invert(playersAndClients))[socket.client.id];
+    
+    //remove the player from all rooms
+    if (playerUserName !== undefined) { 
+      for (room in rooms) {
+        rooms[room].spectators = rooms[room].spectators.filter((user) => user !== playerUserName);
+        rooms[room].playersNotReady = rooms[room].playersNotReady.filter((user) => user !== playerUserName);
+        rooms[room].playersReady = rooms[room].playersReady.filter((user) => user !== playerUserName);
+      }
+    }
+
   });
 
   socket.on('sent a message', (data) => {
     io.in(data.room).emit('recieve message', {username: data.username, message: data.message});
+    //update link of player username to socket id
+    playersAndClients[data.username] = socket.client.id;
   });
 
   socket.on('entering lobby', (data) => {
     //Create socket for client
-    console.log(data.room);
     socket.join(data.room);
-    console.log('joined lobby');
+    console.log(data.username, 'joined lobby');
   });
 
 // When the client emits the 'entering room' event join the socket into that room
@@ -147,6 +170,8 @@ io.on('connection', (socket) => {
     socket.join(data.room);
     //Add player to not-ready state
     rooms[data.room].playersNotReady.push(data.username); 
+    //update link of player username to socket id
+    playersAndClients[data.username] = socket.client.id;
   });
 
 // @Dev team - this is not needed for right now, connection / room is ended when game is over
@@ -156,11 +181,13 @@ socket.on('leaving room', (data) => {
   socket.leave(data.room);
   console.log(data.username, 'left', data.room);
   if (data.username !== undefined) { 
-    rooms[data.room].playersNotReady = rooms[data.room].spectators.filter((user) => user !== data.username);
+    rooms[data.room].spectators = rooms[data.room].spectators.filter((user) => user !== data.username);
     rooms[data.room].playersNotReady = rooms[data.room].playersNotReady.filter((user) => user !== data.username);
-    rooms[data.room].playersNotReady = rooms[data.room].playersReady.filter((user) => user !== data.username);
+    rooms[data.room].playersReady = rooms[data.room].playersReady.filter((user) => user !== data.username);
   }
   // console.log('LEAVING A ROOM, THESE ARE THE ROOMS', io.sockets.adapter.rooms);
+  //update link of player username to socket id
+  playersAndClients[data.username] = socket.client.id;
 });
 
   socket.on('ready', (data) => {
@@ -174,6 +201,8 @@ socket.on('leaving room', (data) => {
       io.in(data.room).emit('startGame');
       console.log('emmiting start game @', data.room);
     }
+    //update link of player username to socket id
+    playersAndClients[data.username] = socket.client.id;
   });
 
   socket.on('i lost', (data) => {
@@ -191,10 +220,14 @@ socket.on('leaving room', (data) => {
       playersNotReady: [], 
       playersReady: []
     };
+    //update link of player username to socket id
+    playersAndClients[data.username] = socket.client.id;
   });
 
   socket.on('send words to opponent', function(data) {
     socket.broadcast.to(data.room).emit('receive words from opponent', data);
+    //update link of player username to socket id
+    playersAndClients[data.username] = socket.client.id;
   });
 });
 
