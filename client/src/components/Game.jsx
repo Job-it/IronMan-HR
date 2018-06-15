@@ -328,7 +328,6 @@ class Game extends React.Component {
   render() {
     return (
       <div className="game">
-        <div><button className='back-to-lobby-btn' onClick={()=> this.goToLobby()}>Back to Lobby</button></div>
         <button onClick={() => this.toggleSound()}>{ this.state.soundOn ? 'Turn Sound Off' : 'Turn Sound On' }</button>
         <div id="overlay">
           <div>{this.state.instructions.map((line, index) => {
@@ -376,6 +375,7 @@ class Game extends React.Component {
             </form>
           </div>
         </div>
+        <div><button className='back-to-lobby-btn' onClick={()=> this.goToLobby()}>Back to Lobby</button></div>
       </div>
     )
   }

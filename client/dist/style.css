@@ -218,15 +218,39 @@ input {
 .scoreboard{
   overflow: auto;
   height: 35%;
+  color: goldenrod;
+  border-style: outset;
+  border-width: 10px;
+  background-color: rgba(0,0,0,.5);
 }
 
 .in-game-chat-wrapper{
   height: 40%;
 }
 
-.sidebar-wrapper{
-  width: 30%;
+.lobby-right {
+  width: 50%;
 }
+
+.sidebar-wrapper{
+  width: 40%;
+
+}
+
+.lobby-sidebar-wrapper{
+  width: 80%;
+  height: 100%;
+  display: block;
+  margin: 0 auto;
+  padding-top: 30px;
+
+}
+
+#chat-lobby-title {
+  text-align: center;
+  padding-top: 10px;
+}
+
 
 .in-game-chat-wrapper .chat-box{
   width: 100%;
@@ -239,6 +263,8 @@ input {
 
 #lobby-room-list-wrapper {
   width: 50%;
+  border-right: 5px dashed black;
+  padding-right: 10px;
 }
 
 #lobby-room-list {
@@ -276,9 +302,47 @@ input {
   color: white;
   background: #881400;
   cursor: pointer;
-  font-size: 1.5em;
   text-shadow: 0px 0px 5px #000;
   text-transform: uppercase;
+  display: block;
+  margin: 0 auto;
+}
+
+.lobby-room-btns{
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.lobby-room-btns button:hover{
+  background-color: goldenrod;
+  cursor: pointer;
+}
+
+.lobby-user-info {
+  padding-left: 10px;
+  width: 100%;
+}
+
+.lobby-user-info button {
+  float: left;
+}
+
+.lobby-user-info button:hover {
+  float: left;
+  cursor: pointer;
+  background-color: red;
+}
+
+.lobby-user-info p {
+  float: right;
+  border-radius: 5px;
+}
+
+#game-room-header {
+  clear: both;
 }
 
 .back-to-lobby-btn:hover {
