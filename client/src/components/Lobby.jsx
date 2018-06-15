@@ -77,9 +77,9 @@ class Lobby extends React.Component {
                 <li style = {styles} className = 'room-details' onClick={() => this.props.handleRoomNameClick(room) }>
                   <span className = 'room-name-header'>{room}</span>
                   <br/>
-                  <span className = 'tiny-details'>In Room: {this.state.rooms[room].playersNotReady.length === 0 ? 'NO ONE | ' : this.state.rooms[room].playersNotReady + ' | '}</span>
-                  <span className = 'tiny-details'>Ready: {this.state.rooms[room].playersReady.length === 0 ? 'NO ONE | ' : this.state.rooms[room].playersReady + ' | '}</span>
-                  <span className = 'tiny-details'>Watching: {this.state.rooms[room].spectators.length === 0 ? 'NO ONE | ' : this.state.rooms[room].spectators}</span>
+                  <span className = 'tiny-details'>In Room: <span className = 'tiny-details-number'> {this.state.rooms[room].playersNotReady.length === 0 ? 'EMPTY' : this.state.rooms[room].playersNotReady} </span> </span><br/>
+                  <span className = 'tiny-details'>Ready: <span className = 'tiny-details-number'> {this.state.rooms[room].playersReady.length === 0 ? 'EMPTY' : this.state.rooms[room].playersReady} </span> </span><br/>
+                  <span className = 'tiny-details'>Watching: <span className = 'tiny-details-number'> {this.state.rooms[room].spectators.length === 0 ? 'EMPTY' : this.state.rooms[room].spectators} </span> </span>
                 </li>
               )
             }) }
