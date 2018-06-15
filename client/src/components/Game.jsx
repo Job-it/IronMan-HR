@@ -297,7 +297,7 @@ class Game extends React.Component {
   showGameoverOverlay() {
 
     this.setState({
-      instructions: [`GAME OVER ${this.state.time > this.state.opponentScore ? 'YOU WIN' : 'YOU LOSE'}`, `YOU SCORED: ${this.state.time}`, `${this.state.opponentName} SCORED: ${this.state.opponentScore}`],
+      instructions: [`GAME OVER \n ${this.state.time > this.state.opponentScore ? 'YOU WIN' : 'YOU LOSE'}`, `YOU SCORED: ${this.state.time}`, `${this.state.opponentName} SCORED: ${this.state.opponentScore}`],
       prompt: 'Back to lobby',
     });
     document.getElementById('overlay').style.display = "block";
