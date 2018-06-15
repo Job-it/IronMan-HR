@@ -22,7 +22,8 @@ class Game extends React.Component {
       opponentScore: 0,
       opponentName: null,
       opponentLost: false,
-    }
+      soundOn: false,
+    };
     
     this.goToLobby = this.goToLobby.bind(this);
     this.getReady = this.getReady.bind(this);
@@ -33,6 +34,7 @@ class Game extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.sendScore = this.sendScore.bind(this);
     this.stopGame = this.stopGame.bind(this);
+    this.toggleSound = this.toggleSound.bind(this);
 
 
     this.props.socket.on('receive words from opponent', (data) => {
@@ -232,13 +234,17 @@ class Game extends React.Component {
       document.getElementById('typing-input').style.backgroundColor = "green";
       var newWords = this.state.words.slice();
       newWords.splice(index, 1);
-      playCorrect(); 
+      if (this.state.soundOn) {
+        playCorrect();
+      }
       this.setState({
         words: newWords,
       });
     } else {
       // else flash red for a mistyped word
-      playWrong(); 
+      if (this.state.soundOn) {
+        playWrong();
+      }
       document.getElementById('typing-input').style.backgroundColor = "red";
     }
 
@@ -308,17 +314,30 @@ class Game extends React.Component {
     this.sendScore(this.props.username, this.state.time);
  
     // audio effect
-    playGameOver();
+    if (this.state.soundOn) {
+      playGameOver();
+    }
+  }
+
+  toggleSound() {
+    this.setState({
+      soundOn: !this.state.soundOn
+    });
   }
 
   render() {
     return (
       <div className="game">
         <div><button className='back-to-lobby-btn' onClick={()=> this.goToLobby()}>Back to Lobby</button></div>
+        <button onClick={() => this.toggleSound()}>{ this.state.soundOn ? 'Turn Sound Off' : 'Turn Sound On' }</button>
         <div id="overlay">
           <div>{this.state.instructions.map((line, index) => {
             // audio effect:
-            playStart();
+            if (this.state.soundOn) {
+              playStart();
+            } else {
+              stopStart();
+            }
             return (<span key={index}>{line}<br></br></span>)
           })}</div>
           <div id="crackedegg"></div>
