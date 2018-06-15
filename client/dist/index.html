@@ -7,21 +7,20 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emojione@3.1.4/extras/css/emojione.min.css"/>
 	</head>
 	<audio id="correct">
-		<source src="/assets" type="audio/mpeg">
+		<source src="./assets/correct.wav" type="audio/mpeg">
 	</audio>
 	<audio id="wrong">
-		<source src="/assets" type="audio/mpeg">
+		<source src="./assets/wrong.wav" type="audio/mpeg">
 	</audio> 
 	<audio id="game-over">
-		<source src="/assets" type="audio/mpeg">
+		<source src="./assets/game_over.wav" type="audio/mpeg">
 	</audio> 
 	<audio id="start">
-		<source src="/assets" type="audio/mpeg">
+		<source src="./assets/start.mp3" type="audio/mpeg">
 	</audio>
 	<script>
 		var correct = document.getElementById("correct")
 		function playCorrect() {
-			  console.log('sound test')
 			  correct.play()
 		}
 
@@ -46,7 +45,7 @@
 		}
 
 		function stopStart() {
-			  start.stop()
+			  start.pause()
 		}
   </script>
 

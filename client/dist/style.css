@@ -218,15 +218,39 @@ input {
 .scoreboard{
   overflow: auto;
   height: 35%;
+  color: goldenrod;
+  border-style: outset;
+  border-width: 10px;
+  background-color: rgba(0,0,0,.5);
 }
 
 .in-game-chat-wrapper{
   height: 40%;
 }
 
-.sidebar-wrapper{
-  width: 30%;
+.lobby-right {
+  width: 50%;
 }
+
+.sidebar-wrapper{
+  width: 40%;
+
+}
+
+.lobby-sidebar-wrapper{
+  width: 80%;
+  height: 100%;
+  display: block;
+  margin: 0 auto;
+  padding-top: 30px;
+
+}
+
+#chat-lobby-title {
+  text-align: center;
+  padding-top: 10px;
+}
+
 
 .in-game-chat-wrapper .chat-box{
   width: 100%;
@@ -239,6 +263,8 @@ input {
 
 #lobby-room-list-wrapper {
   width: 50%;
+  border-right: 5px dashed black;
+  padding-right: 10px;
 }
 
 #lobby-room-list {
@@ -311,7 +337,6 @@ input {
 
 .lobby-user-info p {
   float: right;
-  color: lightseagreen;;
   border-radius: 5px;
 }
 
