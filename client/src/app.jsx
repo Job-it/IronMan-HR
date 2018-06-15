@@ -12,6 +12,7 @@ import Spectator from './components/Spectator.jsx';
 const io = require('socket.io-client'); 
 const socket = io();
 
+
 // var c = io.connect(process.env.PORT);
 // console.log('c', c);
 
@@ -28,6 +29,7 @@ class App extends React.Component {
     this.addRoom = this.addRoom.bind(this);
     this.setRoomToLobby = this.setRoomToLobby.bind(this);
     this.toggleSound = this.toggleSound.bind(this);
+
   }
 
   componentDidMount() {
