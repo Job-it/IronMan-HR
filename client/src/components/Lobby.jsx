@@ -70,7 +70,7 @@ class Lobby extends React.Component {
           <button onClick = {this.getGameRoomsAndSetState}>Update Room List</button>
           <button onClick = {() => {this.addRoomAndGetNewRooms()}} >Add Room</button>
         </div>
-          <ul>
+          <ul className = "room-list">
           <Trail from={{ opacity: 0 }} to={{ opacity: 1 }} keys = {Object.keys(this.state.rooms).map(room => room)}>
             { Object.keys(this.state.rooms).map((room) => styles => {
               return (
