@@ -32,11 +32,13 @@ class Scoreboard extends React.Component {
         <ul className="sbColumn left">RANK</ul>
         <ul className="sbColumn middle">NAME</ul>
         <ul className="sbColumn right">SCORE</ul>
+        <ul className="sbColumn far-right">WPM</ul>
         {this.state.highscore.map((score, index) => 
           <div key={index}>  
             <ul className="sbColumn left">{this.state.rank[this.state.counter++]}</ul>
             <ul className="sbColumn middle">{score.username}</ul>
             <ul className="sbColumn right">{score.high_score}</ul>
+            <ul className="sbColumn far-right">{score.high_wpm}</ul>
           </div>
         )} 
       </div>

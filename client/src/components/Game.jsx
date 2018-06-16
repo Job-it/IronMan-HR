@@ -218,6 +218,7 @@ class Game extends React.Component {
         console.log(Date.now() - this.state.opponentDataLastReceived);
         document.getElementById('their-game').style.backgroundColor = "red";
         document.getElementById('their-gudetama').style.display = "none";
+        //TO DO
         this.setState({
           opponentLost: true,
           opponentAbandonedGame: true,
@@ -345,9 +346,9 @@ class Game extends React.Component {
   showGameoverOverlay() {
 
     if (this.state.opponentAbandonedGame === true) {
-      var overlayMessage = 'YOU WIN: OPPONENT FORFEIT!'
+      var overlayMessage = 'YOU WIN: OPPONENT FORFEIT!';
     } else {
-      var overlayMessage = `GAME OVER ${this.state.time > this.state.opponentScore ? 'YOU WIN' : 'YOU LOSE'}`
+      var overlayMessage = `GAME OVER ${this.state.time > this.state.opponentScore ? 'YOU WIN' : 'YOU LOSE'}`;
     }
 
     this.setState({
