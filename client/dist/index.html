@@ -1,89 +1,9 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<link rel="stylesheet" type="text/css" href="style.css">
-    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/emojione@3.1.4/lib/js/emojione.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emojione@3.1.4/extras/css/emojione.min.css"/>
-      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({
-          google_ad_client: "ca-pub-4878102525265453",
-          enable_page_level_ads: true
-        });
-      </script>
-	</head>
-	<audio id="correct">
-		<source src="./assets/correct.wav" type="audio/mpeg">
-	</audio>
-	<audio id="wrong">
-		<source src="./assets/wrong.wav" type="audio/mpeg">
-	</audio> 
-	<audio id="game-over">
-		<source src="./assets/game_over.wav" type="audio/mpeg">
-	</audio> 
-	<audio id="start">
-		<source src="./assets/start.mp3" type="audio/mpeg">
-	</audio>
-	<script>
-		var correct = document.getElementById("correct")
-		function playCorrect() {
-			  correct.play()
-		}
-
-		var wrong = document.getElementById("wrong")
-		function playWrong() {
-			  wrong.pause()
-			  wrong.play()
-		}
-
-		var gameOver = document.getElementById("game-over")
-		function playGameOver() {
-			  gameOver.pause()
-			  gameOver.play()
-		}
-
-		document.getElementById("start").loop = true;
-		var start = document.getElementById("start")
-		
-
-		function playStart() {
-			  start.play()
-		}
-
-		function stopStart() {
-			  start.pause()
-		}
-  </script>
-
-	<body>		
-
-    <script>
-        window.fbAsyncInit = function() {
-          FB.init({
-            appId      : '1904943516252195',
-            cookie     : true,
-            xfbml      : true,
-            version    : 'v3.0'
-          });
-            
-          
-        };
-      
-        (function(d, s, id){
-          var js, fjs = d.getElementsByTagName(s)[0];
-          if (d.getElementById(id)) {return;}
-          js = d.createElement(s); js.id = id;
-          js.src = "https://connect.facebook.net/en_US/sdk.js";
-          fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-      </script>
-
-    <div id="fb-root"></div>
-
-    <div id="app"></div>
-    
-    <script type="text/javascript" src="bundle.js"></script>
-
-  </body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Production</title>
+  </head>
+  <body id = "app">
+  <script type="text/javascript" src="bundle.js"></script></body>
 </html>
