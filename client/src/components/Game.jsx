@@ -45,7 +45,8 @@ class Game extends React.Component {
 
 
     this.props.socket.on('receive words from opponent', (data) => {
-      if (!this.state.activePlayer) {
+      if (this.state.activePlayer === false) {
+        prompt('this is coming from recieve words');
         this.props.history.push('/spectator');
       }
       // this.updateOpponentWordList(data.newWords);
@@ -59,10 +60,11 @@ class Game extends React.Component {
     });
     this.props.socket.on('startGame', () => {
       console.log('starting game...');
-      if (this.state.activePlayer) {
-        this.startGame();
-      } else {
+      if (this.state.activePlayer === false) {
+        prompt('this is coming from start game words');
         this.props.history.push('/spectator');
+      } else {
+        this.startGame();
       }
     });
     this.props.socket.on('they lost', (data) => {
@@ -131,10 +133,11 @@ class Game extends React.Component {
     this.setState({
       prompt: 'WAITING...',
       activePlayer: true,
-    });
-    this.props.socket.emit('ready', {
-      room: this.props.room, 
-      username: this.props.username
+    }, () => {
+      this.props.socket.emit('ready', {
+        room: this.props.room, 
+        username: this.props.username
+      });
     });
   }
 
@@ -214,7 +217,7 @@ class Game extends React.Component {
 
       //if the opponent hasn't emitted a word in 4 seconds or more
       //end the game, because the opponent left.
-      if (Date.now() - this.state.opponentDataLastReceived > 4000) {
+      if (Date.now() - this.state.opponentDataLastReceived > 4000 && this.state.opponentLost === false) {
         console.log(Date.now() - this.state.opponentDataLastReceived);
         document.getElementById('their-game').style.backgroundColor = "red";
         document.getElementById('their-gudetama').style.display = "none";
@@ -332,12 +335,32 @@ class Game extends React.Component {
 
   goToLobby() {
     this.setState({
+      userInput: '',
+      dictionary: {},
+      words: [],
+      correctWords: 0,
+      theirWords: [],
+      time: 0,
+      timeInterval: 1000,
+      round: 'all',
+      instructions: ["HURRY - KEEP TYPING TO PREVENT HIS DEMISE!"],
+      prompt: 'START GAME',
+      opponentTime: 0,
+      userNameSelected: false,
       gameover: false,
+      activePlayer: false,
+      opponentScore: 0,
+      opponentName: null,
+      opponentLost: false,
       startTime: 0,
       stopTime: 0,
-      correctWords: 0,
       wpm: 0,
+      opponentAbandonedGame: false,
+      opponentDataLastReceived: null,
+      iLost: false,
     });
+    document.getElementById('their-game').style.backgroundColor = "";
+    document.getElementById('our-game').style.backgroundColor = "";
     this.props.history.push('/lobby');
     this.props.setRoomToLobby();
   }

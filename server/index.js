@@ -119,6 +119,8 @@ app.get('/gamerooms', (req, res) => {
 
 // Returns the total numbers of players that are READY in a given room to trigger the start of a match
 var getReadyPlayerCount = (roomName) => {
+  console.log(rooms[roomName]);
+
   return rooms[roomName].playersReady.length;
 }
 
@@ -158,7 +160,9 @@ io.on('connection', (socket) => {
 
   socket.on('entering lobby', (data) => {
     //Create socket for client
+    //they nedd to leave their previous room
     socket.join(data.room);
+    console.log(data);
     console.log(data.username, 'joined lobby');
   });
 
