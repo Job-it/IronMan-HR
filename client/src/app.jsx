@@ -38,8 +38,8 @@ class App extends React.Component {
         if (response.headers.user) {
           var user = JSON.parse(response.headers.user);
           this.setState({
-            // username: user.displayName
-            username: prompt('wuts ur name??'),
+            username: user.displayName
+            // username: prompt('wuts ur name??'),
           })
         } else {
           var user = undefined;
@@ -55,7 +55,7 @@ class App extends React.Component {
   addRoom() {
     var playerRoom = prompt('Create or join a room:');
     if (playerRoom !== null) {
-      axios.post('/gamerooms', {newRoom: playerRoom});
+      axios.post('/rooms', {newRoom: playerRoom});
     }
   }
 
