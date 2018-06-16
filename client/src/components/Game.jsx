@@ -46,7 +46,6 @@ class Game extends React.Component {
 
     this.props.socket.on('receive words from opponent', (data) => {
       if (this.state.activePlayer === false) {
-        prompt('this is coming from recieve words');
         this.props.history.push('/spectator');
       }
       // this.updateOpponentWordList(data.newWords);
@@ -61,7 +60,6 @@ class Game extends React.Component {
     this.props.socket.on('startGame', () => {
       console.log('starting game...');
       if (this.state.activePlayer === false) {
-        prompt('this is coming from start game words');
         this.props.history.push('/spectator');
       } else {
         this.startGame();
