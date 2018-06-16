@@ -55,7 +55,7 @@ class App extends React.Component {
   addRoom() {
     var playerRoom = prompt('Create or join a room:');
     if (playerRoom !== null) {
-      axios.post('/gamerooms', {newRoom: playerRoom});
+      axios.post('/rooms', {newRoom: playerRoom});
     }
   }
 

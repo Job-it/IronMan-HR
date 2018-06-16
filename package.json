@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/index.js",
-    "react-dev": "webpack-dev-server --config webpack.dev.js",
+    "react-dev": "webpack --config webpack.dev.js",
     "server-dev": "nodemon server/index.js",
     "heroku-postbuild": "webpack -p --config webpack.prod.js --progress"
   },

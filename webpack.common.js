@@ -3,24 +3,22 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var SRC_DIR = path.join(__dirname, '/client/src');
+var DIST_DIR = path.join(__dirname, '/client/dist');
 
 module.exports = {
   entry: {
     app: `${SRC_DIR}/index.jsx`
   },
   plugins: [
-      new CleanWebpackPlugin(['dist']),
-      new HtmlWebpackPlugin({
-        title: 'Production'
-      }),    
+      new CleanWebpackPlugin(['dist']),    
       new MiniCssExtractPlugin({
         filename: "[name].css",
         chunkFilename: "[id].css"
       })
     ],
     output: {
-      filename: '[name].bundle.js',
-      path: path.resolve(__dirname, 'dist')
+      filename: 'bundle.js',
+      path: DIST_DIR
     }, 
     module : {
       rules : [
