@@ -2,10 +2,18 @@
 
 Welcome to the Save Gudetama typing game! The typing game for "adults."
 
+In 'Save Gudetama' users type as fast as they can to save their Gudetama. If they type fast enough you can save your own Gudetama and watch as your opponent's gudetama gets crushed to eggy-goo by a pile of bricks! Challenge your friends, enjoy the 8-bit design and retro-themes /sounds. We really enjoyed building this project, your feedback is welcomed! 
+
+![Alt Text](./output.gif)
+
 In this project we built multiplayer functionality to enhance the gameplay of the 'Save Gudetama' typing game. Players are now able to authenticate with Facebook, create & enter game rooms to chat and play 'Save Gudetama' with their friends.
 
-In gameplay users type as fast as they can to save their Gudetama. If they type fast enough you can save your own Gudetama and watch as your opponent's gudetama gets crushed to eggy-goo by a pile of bricks! Challenge your friends, enjoy the 8-bit design and retro-themes /sounds. We really enjoyed building this project, your feedback is welcomed! 
-
+## Features
+- Responsive web design with web and mobile views
+- User Authentication via Facebook
+- Real-time client to client communication
+- Fun gameplay!
+- Lobby, chat, matchmaking
 
 ## Getting Started
 
@@ -93,7 +101,7 @@ In order to deploy your own version, you need to:
 ## Authors
 
 * **John Cynn** - *Lobby, chat, matchmaking, authentication, gameplay enhancements* - [nickrzip](https://github.com/nickrzip)
-* **Phillip Gonzalez** - *Lobby, chat, matchmaking, authentication, gameplay enhancements* - [p-gonzo](https://github.com/p-gonzo)
+* **Philip Gonzalez** - *Lobby, chat, matchmaking, authentication, gameplay enhancements* - [p-gonzo](https://github.com/p-gonzo)
 * **Nick Rogers** - *Lobby, chat, matchmaking, authentication, gameplay enhancements* - [jcynn12](https://github.com/jcynn12)
 
 ## License
