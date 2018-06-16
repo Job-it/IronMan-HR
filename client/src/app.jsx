@@ -38,8 +38,8 @@ class App extends React.Component {
         if (response.headers.user) {
           var user = JSON.parse(response.headers.user);
           this.setState({
-            username: user.displayName
-            // username: prompt('wuts ur name??'),
+            // username: user.displayName
+            username: prompt('Please enter a display name'),
           })
         } else {
           var user = undefined;
@@ -66,10 +66,13 @@ class App extends React.Component {
   }
 
   setRoomToLobby() {
+    console.log('ran set room to lobby');
+    var previousRoom = this.state.room;
     this.setState({
       room: 'GUDETAMA lobby',
     })
-    this.props.socket.emit('entering lobby', {room: 'GUDETAMA lobby'});
+    this.props.socket.emit('leaving room', {room: previousRoom, username: this.state.username});
+    this.props.socket.emit('entering lobby', {room: 'GUDETAMA lobby', username: this.state.username});
   }
 
   handleRoomNameClick(clickedRoom) {

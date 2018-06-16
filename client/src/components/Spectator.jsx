@@ -18,7 +18,6 @@ class Spectator extends React.Component {
       opponentTime: 0,
       userNameSelected: false,
       gameover: false,
-      activePlayer: false,
       p1Name: undefined,
       p2Name: undefined,
       p1Score: 0,
@@ -158,8 +157,25 @@ class Spectator extends React.Component {
 
   goToLobby() {
     this.setState({
-      gameover: false
+      userInput: '',
+      dictionary: {},
+      words: [],
+      theirWords: [],
+      time: 0,
+      timeInterval: 1000,
+      round: 'all',
+      instructions: ["Humpty Dumpty sat on a wall,", "Humpty Dumpty had a great fall.", "All the king's horses and all the king's men", "Couldn't put Humpty together again.", "HURRY - KEEP TYPING TO PREVENT HIS DEMISE!"],
+      prompt: 'START GAME',
+      opponentTime: 0,
+      userNameSelected: false,
+      gameover: false,
+      p1Name: undefined,
+      p2Name: undefined,
+      p1Score: 0,
+      p2Score: 0,
     })
+    document.getElementById('their-game').style.backgroundColor = "";
+    document.getElementById('our-game').style.backgroundColor = "";
     this.props.history.push('/lobby');
     this.props.setRoomToLobby();
   }

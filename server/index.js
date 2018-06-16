@@ -71,21 +71,27 @@ app.get('/dictionary', (req, res) => {
 
 var port = process.env.PORT || 5000;
 
-var certOptions = {
-  key: fs.readFileSync(path.resolve('server.key')),
-  cert: fs.readFileSync(path.resolve('server.crt'))
+//Conditional check for DEV vs DEPLOYMENT environments
+if (process.env.DEPLOYED !== 'true') {
+
+  var certOptions = {
+    key: fs.readFileSync(path.resolve('server.key')),
+    cert: fs.readFileSync(path.resolve('server.crt'))
+  }
+
+  var server = https.createServer(certOptions, app).listen(port, function() {
+    console.log(`listening on port ${port}!`);
+  });
+
+} else {
+  var server = app.listen(port, () => {
+    console.log(`listening on port ${port}!`);
+  });
 }
 
-var server = https.createServer(certOptions, app).listen(port, function() {
-  console.log(`listening on port ${port}!`);
-});
 
 // START SOCKET FUNCTIONALITY
 var io = require('socket.io')(server);
-
-// var server = app.listen(port, () => {
-//   console.log(`listening on port ${port}!`);
-// });
 
 // MESSAGES ROUTER
 
@@ -117,6 +123,8 @@ app.get('/gamerooms', (req, res) => {
 
 // Returns the total numbers of players that are READY in a given room to trigger the start of a match
 var getReadyPlayerCount = (roomName) => {
+  console.log(rooms[roomName]);
+
   return rooms[roomName].playersReady.length;
 }
 
@@ -134,9 +142,10 @@ io.on('connection', (socket) => {
 
   socket.on('entering lobby', (data) => {
     //Create socket for client
-    console.log(data.room);
+    //they nedd to leave their previous room
     socket.join(data.room);
-    console.log('joined lobby');
+    console.log(data);
+    console.log(data.username, 'joined lobby');
   });
 
 // When the client emits the 'entering room' event join the socket into that room
