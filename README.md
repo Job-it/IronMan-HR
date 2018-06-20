@@ -100,9 +100,9 @@ In order to deploy your own version, you need to:
 
 ## Authors
 
-* **John Cynn** - *Lobby, chat, matchmaking, authentication, gameplay enhancements* - [nickrzip](https://github.com/nickrzip)
+* **John Cynn** - *Lobby, chat, matchmaking, authentication, gameplay enhancements* - [jcynn12](https://github.com/jcynn12)
 * **Philip Gonzalez** - *Lobby, chat, matchmaking, authentication, gameplay enhancements* - [p-gonzo](https://github.com/p-gonzo)
-* **Nick Rogers** - *Lobby, chat, matchmaking, authentication, gameplay enhancements* - [jcynn12](https://github.com/jcynn12)
+* **Nick Rogers** - *Lobby, chat, matchmaking, authentication, gameplay enhancements* - [rogersanick](https://github.com/rogersanick)
 
 ## License
 
